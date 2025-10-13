@@ -1,14 +1,15 @@
 
-import fs = require('fs');
+//import fs = require('fs');
 
-enum TokenType {
+export enum TokenType {
     Number, 
     Identifier, 
     Equals,
     Openparen, 
     Closeparen, 
     BinaryOper,
-    Let
+    Let,
+    EOF
 }
 
 export interface Token {
@@ -20,7 +21,7 @@ const KEYWORDS : Record<string, TokenType> = {
     "let" : TokenType.Let,
 }
 
-function token(value: string, type: TokenType):Token {
+export function token(value: string, type: TokenType):Token {
 
     return {value, type};
     
@@ -42,7 +43,7 @@ function isSkippable(STR: string) {
     return STR == " " || STR== "\n" || STR == "\t"
 }
 
-function tokenize(sourceCode: string): Token[]{
+export function tokenize(sourceCode: string): Token[]{
     const tokens = new Array<Token>();
     const src = sourceCode.split('');
     
@@ -97,7 +98,7 @@ function tokenize(sourceCode: string): Token[]{
 } 
 
 
-const source = fs.readFileSync('./test.txt', 'utf-8') 
-for (const token of tokenize(source)) {
-    console.log(token);
-}
+//const source = fs.readFileSync('./test.txt', 'utf-8') 
+//for (const token of tokenize(source)) {
+//    console.log(token);
+// }

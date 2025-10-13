@@ -1,4 +1,4 @@
-import server = require("./davinci-hare/convex/_generated/server")
+
 
 export type NodeType = "Program" | "NumericLiteral" | "Identifier" | "BinaryExpr"
 
