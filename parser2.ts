@@ -1,8 +1,8 @@
-
 import {
   BinaryExpr,
   Expr,
   Identifier,
+  NullLiteral,
   NumericLiteral,
   Program,
   Stat,
@@ -20,16 +20,14 @@ export default class Parser {
    * Determines if the parsing is complete and the END OF FILE Is reached.
    */
   private not_eof() {
-    while ( this.tokens[0]!) {
-    return this.tokens[0].type != TokenType.EOF;}
-    
+    return this.tokens[0]?.type != TokenType.EOF;
   }
 
   /**
    * Returns the currently available token
    */
-  private at() {
-    return this.tokens[0] as Token;
+  private at(): Token | undefined {
+    return this.tokens[0];
   }
 
   /**
@@ -42,13 +40,13 @@ export default class Parser {
 
   /**
    * Returns the previous token and then advances the tokens array to the next value.
-   *  Also checks the type of expected token and throws if the values dnot match.
+   *  Also checks the type of expected token and throws if the values dont match.
    */
   private expect(type: TokenType, err: any) {
     const prev = this.tokens.shift() as Token;
     if (!prev || prev.type != type) {
       console.error("Parser Error:\n", err, prev, " - Expecting: ", type);
-      
+      throw new Error(err);
     }
 
     return prev;
@@ -60,12 +58,12 @@ export default class Parser {
       kind: "Program",
       body: [],
     };
-
+    
     // Parse until end of file
     while (this.not_eof()) {
       program.body.push(this.parse_stmt());
     }
-
+    
     return program;
   }
 
@@ -82,12 +80,13 @@ export default class Parser {
 
   // Handle Addition & Subtraction Operations
   private parse_additive_expr(): Expr {
-    let left = this.parse_multiplicitave_expr();
+    let left = this.parse_multiplicative_expr();
 
-    while (this.at()! &&
-      (this.at().value! == "+" || this.at().value! == "-")) {
+    while (this.at() &&
+      this.at()!.type === TokenType.BinaryOper &&
+      (this.at()!.value === "+" || this.at()!.value === "-")) {
       const operator = this.eat().value;
-      const right = this.parse_multiplicitave_expr();
+      const right = this.parse_multiplicative_expr();
       left = {
         kind: "BinaryExpr",
         left,
@@ -100,11 +99,11 @@ export default class Parser {
   }
 
   // Handle Multiplication, Division & Modulo Operations
-  private parse_multiplicitave_expr(): Expr {
+  private parse_multiplicative_expr(): Expr {
     let left = this.parse_primary_expr();
 
-    while ( this.at()! &&
-      (this.at().value == "/" || this.at().value == "*" || this.at().value == "%")
+    while (this.at() &&
+      (this.at().value === "/" || this.at().value === "*" || this.at().value === "%")
     ) {
       const operator = this.eat().value;
       const right = this.parse_primary_expr();
@@ -119,20 +118,25 @@ export default class Parser {
     return left;
   }
 
-  // Orders Of Prescidence
+  // Orders Of Precedence
   // AdditiveExpr
-  // MultiplicitaveExpr
+  // MultiplicativeExpr
   // PrimaryExpr
 
   // Parse Literal Values & Grouping Expressions
   private parse_primary_expr(): Expr {
-    const tk = this.at().type;
+
+    const tk = this.at()?.type;
 
     // Determine which token we are currently at and return literal value
-    switch (tk) {
+    switch (tk!) {
       // User defined values.
       case TokenType.Identifier:
         return { kind: "Identifier", symbol: this.eat().value! } as Identifier;
+
+      case TokenType.Null:
+        this.eat(); // advance past null 
+        return { kind: "NullLiteral", value: "null"} as NullLiteral;
 
       // Constants and Numeric Constants
       case TokenType.Number:
@@ -154,8 +158,8 @@ export default class Parser {
 
       // Unidentified Tokens and Invalid Code Reached
       default:
-        console.error("Unexpected token found during parsing!", this.at());
-
+        throw new Error(`Unexpected token found during parsing: ${this.at()?.value}`);
+        
     }
   }
 }

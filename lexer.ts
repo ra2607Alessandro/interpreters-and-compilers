@@ -2,6 +2,7 @@
 //import fs = require('fs');
 
 export enum TokenType {
+    Null,
     Number, 
     Identifier, 
     Equals,
@@ -19,6 +20,7 @@ export interface Token {
 
 const KEYWORDS : Record<string, TokenType> = {
     "let" : TokenType.Let,
+    "null" : TokenType.Null
 }
 
 export function token(value: string, type: TokenType):Token {
@@ -52,17 +54,16 @@ export function tokenize(sourceCode: string): Token[]{
     if (src[0] == "(") {
         tokens.push(token(src.shift()!, TokenType.Openparen));
     }
-    if (src[0] == ")") {
+    else if (src[0] == ")") {
         tokens.push(token(src.shift()!, TokenType.Closeparen));
     }
-    if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/"|| src[0]== "%"){
+    else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/"|| src[0]== "%"){
         tokens.push(token(src.shift()!, TokenType.BinaryOper));
     }
-    if (src[0] == "=") {
+    else if (src[0] == "=") {
         tokens.push(token(src.shift()!, TokenType.Equals))
     }
-    else {
-        if (isInt(src[0]!)) {
+    else if (isInt(src[0]!)) {
             let num = "";
             while (src.length > 0 && isInt(src[0]!)) {
                 num += src.shift()
@@ -70,29 +71,30 @@ export function tokenize(sourceCode: string): Token[]{
             tokens.push(token(num, TokenType.Number));
         }
 
-        if (isAlpha(src[0]!)) {
+        else if (isAlpha(src[0]!)) {
             let ident = "";
             while (src.length > 0 && isAlpha(src[0]!)) {
                 ident += src.shift()
             }
 
             const reserved = KEYWORDS[ident];
-            if (reserved == undefined) {
-                tokens.push(token(ident, TokenType.Identifier))
-            }
-            else {
-              tokens.push(token(ident, reserved))
-            }
+             if (typeof reserved == "number") {
+               tokens.push(token(ident, reserved));
+            } else {
+            // Unreconized name must mean user defined symbol.
+            tokens.push(token(ident, TokenType.Identifier));
+        }
         }
 
         else if (isSkippable(src[0]!)) {
             src.shift();}
             else {
                 console.log("Uncategorized character", src[0]);
+                src.shift();
                 }
-            }
+            
         }
-    
+        tokens.push({ type: TokenType.EOF, value: "EndOfFile" });
         return tokens
 
 } 

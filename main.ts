@@ -19,6 +19,6 @@ function repl() {
 
     // Produce AST From sourc-code
     const program = parser.produceAST(input);
-    console.log(program);
+    console.log(JSON.stringify(program, null, 2));
   }
 }
