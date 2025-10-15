@@ -102,8 +102,8 @@ export default class Parser {
   private parse_multiplicative_expr(): Expr {
     let left = this.parse_primary_expr();
 
-    while (this.at() &&
-      (this.at().value === "/" || this.at().value === "*" || this.at().value === "%")
+    while (this.at()! &&
+      (this.at()!.value === "/" || this.at()!.value === "*" || this.at()!.value === "%")
     ) {
       const operator = this.eat().value;
       const right = this.parse_primary_expr();
