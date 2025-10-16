@@ -11,7 +11,7 @@ repl();
 function repl() {
   const parser = new Parser();
   const env = new Environment();
-  env.declareVar("x", {type: "number", value: 100} as NumValue)
+  
   env.declareVar("true", {type: "boolean", value: true} as BooleanVal);
   env.declareVar("false", {type: "boolean", value: false} as BooleanVal);
   console.log("\nRepl v0.1");

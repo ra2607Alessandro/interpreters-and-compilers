@@ -1,5 +1,5 @@
 import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue } from "./value";
-import { BinaryExpr, Identifier, NodeType, NumericLiteral, Program, Stat } from "./ast";
+import { BinaryExpr, Identifier, NodeType, NumericLiteral, Program, Stat, VariableDeclare } from "./ast";
 import { Environment } from "./environment";
 
 function eval_program(program: Program, env: Environment):RuntimeVal {
@@ -49,6 +49,10 @@ function evaluate_identifier(ident: Identifier, env: Environment): RuntimeVal {
         const val = env.LooksUp(ident.symbol);
         return val;
 }
+function eval_declar_var(dec: VariableDeclare, env: Environment, constant: boolean ): RuntimeVal {
+    const val = dec.value ? evaluate(dec.value, env) : {} as NullValue ;  
+    return env.declareVar(dec.identifier, val) 
+}
 
 export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
     switch(astNode.kind) {
@@ -62,6 +66,8 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
             return eval_program(astNode as Program, env);
         case "BinaryExpr":
             return eval_binary_expr(astNode as BinaryExpr, env) ;
+        case "VariableDeclare":
+            return eval_declar_var(astNode as VariableDeclare, env);
         default:
             throw new Error(`This AST Node has not yet been setup for interpretation, ${astNode}`)
 

@@ -1,3 +1,4 @@
+import { error } from "console";
 import {
   BinaryExpr,
   Expr,
@@ -6,6 +7,7 @@ import {
   NumericLiteral,
   Program,
   Stat,
+  VariableDeclare,
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
@@ -67,10 +69,34 @@ export default class Parser {
     return program;
   }
 
+  private parse_declaration(): Stat {
+        const isCostant = this.at()!.type == TokenType.Const
+        this.eat();
+        const identifier = this.expect(
+          TokenType.Identifier,
+          "Bro, you need to put in an identifier man!"
+        ).value; 
+
+        this.expect( 
+          TokenType.Equals,
+          "Bro wtf? put an '='. I'm lowkey tired of you vibe coders"
+        )
+         return {
+          kind: "VariableDeclare", 
+          identifier, 
+          constant: isCostant,
+          value: this.parse_expr()
+        } as VariableDeclare
+
+  }
+
   // Handle complex statement types
   private parse_stmt(): Stat {
     // skip to parse_expr
-    return this.parse_expr();
+    if (this.at()!.value === "let" || this.at()!.value === "const") {
+        return this.parse_declaration()
+    }
+    else {return this.parse_expr();}
   }
 
   // Handle expressions
@@ -158,6 +184,7 @@ export default class Parser {
 
       // Unidentified Tokens and Invalid Code Reached
       default:
+        console.log(this.at())
         throw new Error(`Unexpected token found during parsing: ${this.at()?.value}`);
         
     }

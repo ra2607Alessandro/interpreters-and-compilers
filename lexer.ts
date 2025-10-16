@@ -10,6 +10,7 @@ export enum TokenType {
     Closeparen, 
     BinaryOper,
     Let,
+    Const,
     EOF
 }
 
@@ -20,6 +21,7 @@ export interface Token {
 
 const KEYWORDS : Record<string, TokenType> = {
     "let" : TokenType.Let,
+    "const": TokenType.Const,
     "null" : TokenType.Null
 }
 
