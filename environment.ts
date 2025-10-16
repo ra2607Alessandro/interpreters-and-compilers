@@ -19,7 +19,7 @@ export class Environment {
         
         this.variables.set(varname, value);
 
-        if (constant){
+        if (constant === true){
             this.constants.add(varname);
         }
         return value
@@ -33,21 +33,20 @@ export class Environment {
     }
 
     public resolve(varname: string): Environment {
-        if (this.variables.has(varname))
-            return this
-        if (this.constants.has(varname)) throw "Bro, we can't assign a variable to a constant"
+        if (this.variables.has(varname)) 
+            {return this}
         
        
-        if (this.parent == undefined) throw `bro, ${varname} doesn't exist`
+        if (this.parent == undefined) 
+            {throw `bro, ${varname} doesn't exist`}
+
         return this.parent.resolve(varname)
     }
 
     public assignVar(varname:string, value: RuntimeVal): RuntimeVal {
         const env = this.resolve(varname);
-    
-        if (env.constants.has(varname)) 
+     if (env.constants.has(varname)) 
             {throw new Error("Bro, we can't assign a variable to a constant")}
-
         
         env.variables.set(varname, value);
         return value;

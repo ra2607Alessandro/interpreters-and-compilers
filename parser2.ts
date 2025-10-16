@@ -1,5 +1,6 @@
 import { error } from "console";
 import {
+  AssignmentExpr,
   BinaryExpr,
   Expr,
   Identifier,
@@ -11,6 +12,8 @@ import {
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
+import { env } from "process";
+import { evaluate } from "./interpreter";
 
 /**
  * Frontend for producing a valid AST from sourcode
@@ -93,17 +96,35 @@ export default class Parser {
   // Handle complex statement types
   private parse_stmt(): Stat {
     // skip to parse_expr
+    const current = this.at();
+    if (!current) {
+      throw new Error("Unexpected end of input")
+    }
+
     if (this.at()!.value === "let" || this.at()!.value === "const") {
         return this.parse_declaration()
     }
     else {return this.parse_expr();}
   }
 
-  // Handle expressions
-  private parse_expr(): Expr {
-    return this.parse_additive_expr();
+
+  private parse_assignment_expr(): Expr {
+    const first = this.parse_additive_expr()
+
+    if (this.at()!.type == TokenType.Equals) {
+     this.eat()
+     const value = this.parse_assignment_expr()
+     return {kind: "Assignment Expr", assigne: first, value: value} as AssignmentExpr
+    }
+    return first
   }
 
+  // Handle expressions
+  private parse_expr(): Expr {
+    return this.parse_assignment_expr();
+  }
+
+  
   // Handle Addition & Subtraction Operations
   private parse_additive_expr(): Expr {
     let left = this.parse_multiplicative_expr();
@@ -128,8 +149,7 @@ export default class Parser {
   private parse_multiplicative_expr(): Expr {
     let left = this.parse_primary_expr();
 
-    while (this.at()! &&
-      (this.at()!.value === "/" || this.at()!.value === "*" || this.at()!.value === "%")
+    while (this.at()! && (this.at()!.value === "/" || this.at()!.value === "*" || this.at()!.value === "%")
     ) {
       const operator = this.eat().value;
       const right = this.parse_primary_expr();

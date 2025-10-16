@@ -1,6 +1,8 @@
-import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue } from "./value";
-import { BinaryExpr, Identifier, NodeType, NumericLiteral, Program, Stat, VariableDeclare } from "./ast";
+import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal } from "./value";
+import { AssignmentExpr, BinaryExpr, Identifier, NodeType, NumericLiteral, Program, Stat, VariableDeclare } from "./ast";
 import { Environment } from "./environment";
+import { TokenType } from "./lexer";
+import { constants } from "buffer";
 
 function eval_program(program: Program, env: Environment):RuntimeVal {
     let last_astNode : RuntimeVal = {
@@ -49,9 +51,17 @@ function evaluate_identifier(ident: Identifier, env: Environment): RuntimeVal {
         const val = env.LooksUp(ident.symbol);
         return val;
 }
-function eval_declar_var(dec: VariableDeclare, env: Environment, constant: boolean ): RuntimeVal {
-    const val = dec.value ? evaluate(dec.value, env) : {} as NullValue ;  
-    return env.declareVar(dec.identifier, val) 
+function eval_declar_var(dec: VariableDeclare, env: Environment, constant?: boolean  ): RuntimeVal {
+    const val = dec.value ? evaluate(dec.value, env) : {} as NullValue ; 
+    return env.declareVar(dec.identifier, val, constant!) 
+}
+
+function eval_assignments_expr(node: AssignmentExpr, env: Environment, ): RuntimeVal {
+    if ( node.assigne.kind !== "Identifier"){
+        throw "Sorry, the assignment expression has to be an Identifier"
+    }
+    const varname = (node.assigne as Identifier).symbol
+    return env.assignVar(varname, evaluate(node.value, env))
 }
 
 export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
@@ -67,7 +77,9 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
         case "BinaryExpr":
             return eval_binary_expr(astNode as BinaryExpr, env) ;
         case "VariableDeclare":
-            return eval_declar_var(astNode as VariableDeclare, env);
+            return eval_declar_var(astNode as VariableDeclare, env, (astNode as VariableDeclare).constant);
+        case "Assignment Expr":
+            return eval_assignments_expr(astNode as AssignmentExpr, env)
         default:
             throw new Error(`This AST Node has not yet been setup for interpretation, ${astNode}`)
 
