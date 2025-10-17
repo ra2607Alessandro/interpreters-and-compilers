@@ -1,13 +1,15 @@
-
 //import fs = require('fs');
-
 export enum TokenType {
     Null,
     Number, 
     Identifier, 
     Equals,
+    Comma,
+    Colon,
     Openparen, 
     Closeparen, 
+    OpenBrace,
+    CloseBrace,
     BinaryOper,
     Let,
     Const,
@@ -58,6 +60,18 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == ")") {
         tokens.push(token(src.shift()!, TokenType.Closeparen));
+    }
+    else if (src[0] == "}") {
+        tokens.push(token(src.shift()!, TokenType.CloseBrace));
+    }
+    else if (src[0] == "{") {
+        tokens.push(token(src.shift()!, TokenType.OpenBrace));
+    }
+    else if (src[0] == ",") {
+        tokens.push(token(src.shift()!, TokenType.Comma));
+    }
+    else if (src[0] == ":") {
+        tokens.push(token(src.shift()!, TokenType.Colon));
     }
     else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/"|| src[0]== "%"){
         tokens.push(token(src.shift()!, TokenType.BinaryOper));

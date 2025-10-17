@@ -6,7 +6,9 @@ import {
   Identifier,
   NullLiteral,
   NumericLiteral,
+  ObjectLiteral,
   Program,
+  Property,
   Stat,
   VariableDeclare,
 } from "./ast";
@@ -108,8 +110,49 @@ export default class Parser {
   }
 
 
-  private parse_assignment_expr(): Expr {
-    const first = this.parse_additive_expr()
+  public parse_object(): Expr {
+    if (this.at()!.type !== TokenType.OpenBrace) {
+        return this.parse_additive_expr();
+    }
+    
+    this.eat(); // eat the opening brace
+    const properties = new Array<Property>();
+    
+    while (this.not_eof() && this.at()!.type !== TokenType.CloseBrace) {
+        // Get the property key
+        const key = this.expect(
+            TokenType.Identifier,
+            "Expected identifier as object property key"
+        ).value;
+
+        // If it's a shorthand property
+        if (this.at()!.type === TokenType.Comma) {
+            this.eat(); // eat the comma
+            properties.push({ key, kind: "Property" } as Property);
+            continue;
+        }
+        
+        if (this.at()!.type === TokenType.CloseBrace) {
+            properties.push({ key, kind: "Property" } as Property);
+            continue;
+        }
+
+        // Regular property with value
+        this.expect(TokenType.Colon, "Expected colon after property key");
+        const value = this.parse_expr();
+        properties.push({ kind: "Property", key, value });
+
+        if (this.at()!.type !== TokenType.CloseBrace) {
+            this.expect(TokenType.Comma, "Expected comma or closing brace after property");
+        }
+    }
+
+    this.expect(TokenType.CloseBrace, "Expected closing brace");
+    return {kind: "ObjectLiteral", properties} as ObjectLiteral;
+}
+      
+ private parse_assignment_expr(): Expr {
+    const first = this.parse_object()
 
     if (this.at()!.type == TokenType.Equals) {
      this.eat()
@@ -118,6 +161,12 @@ export default class Parser {
     }
     return first
   }
+
+  // Handle expressions
+ 
+       
+
+
 
   // Handle expressions
   private parse_expr(): Expr {

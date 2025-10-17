@@ -1,7 +1,7 @@
 import { TokenType } from "./lexer";
 
 
-export type NodeType = "Program" | "NumericLiteral" | "NullLiteral" | "Identifier" | "BinaryExpr" | "VariableDeclare" | "Assignment Expr"
+export type NodeType = "Program" | "NumericLiteral" | "NullLiteral" | "Identifier" | "BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral"
 
 export interface Stat {
     kind: NodeType
@@ -48,3 +48,15 @@ export interface NullLiteral extends Expr {
     kind: "NullLiteral",
     value: "null"
 }
+
+export interface Property extends Expr {
+    kind: "Property",
+    key: string,
+    value?: Expr
+}
+
+export interface ObjectLiteral extends Expr {
+     kind: "ObjectLiteral",
+     properties: Property[]
+}
+
