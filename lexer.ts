@@ -11,6 +11,7 @@ export enum TokenType {
     OpenBrace,
     CloseBrace,
     BinaryOper,
+    Boolean,
     Let,
     Const,
     EOF
@@ -24,7 +25,9 @@ export interface Token {
 const KEYWORDS : Record<string, TokenType> = {
     "let" : TokenType.Let,
     "const": TokenType.Const,
-    "null" : TokenType.Null
+    "null" : TokenType.Null,
+    "true" : TokenType.Boolean,
+    "false" : TokenType.Boolean
 }
 
 export function token(value: string, type: TokenType):Token {
@@ -72,6 +75,9 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == ":") {
         tokens.push(token(src.shift()!, TokenType.Colon));
+    }
+    else if (src[0] == "true" || src[0] == "false"){
+        tokens.push(token(src.shift()!, TokenType.Boolean))
     }
     else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/"|| src[0]== "%"){
         tokens.push(token(src.shift()!, TokenType.BinaryOper));

@@ -28,17 +28,19 @@ export class Environment {
     public LooksUp(varname: string): RuntimeVal {
         
             const env = this.resolve(varname);
+             
             return env.variables.get(varname) as RuntimeVal
         
     }
 
-    public resolve(varname: string): Environment {
+    public resolve(varname: string ): Environment {
         if (this.variables.has(varname)) 
             {return this}
         
        
         if (this.parent == undefined) 
             {throw `bro, ${varname} doesn't exist`}
+        
 
         return this.parent.resolve(varname)
     }
@@ -52,7 +54,5 @@ export class Environment {
         return value;
         
     }
-
-
 
 }

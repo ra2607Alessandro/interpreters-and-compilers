@@ -1,5 +1,5 @@
-import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal } from "./value";
-import { AssignmentExpr, BinaryExpr, Identifier, NodeType, NumericLiteral, Program, Stat, VariableDeclare } from "./ast";
+import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL } from "./value";
+import { AssignmentExpr, BinaryExpr, BooleanLiteral, Identifier, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, VariableDeclare } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
 import { constants } from "buffer";
@@ -64,6 +64,20 @@ function eval_assignments_expr(node: AssignmentExpr, env: Environment, ): Runtim
     return env.assignVar(varname, evaluate(node.value, env))
 }
 
+function eval_object(obj: ObjectLiteral, env: Environment): RuntimeVal {
+
+    const object = { type: "object", properties: new Map() } as ObjectValue;
+  
+
+    for (const { key, value } of obj.properties){
+    
+    const runtimeVal = (value == undefined) ? env.LooksUp(key) : evaluate(value, env);      
+    object.properties.set(key, runtimeVal)
+}
+    return object
+
+}
+
 export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
     switch(astNode.kind) {
         case "NumericLiteral":
@@ -79,8 +93,12 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
         case "VariableDeclare":
             return eval_declar_var(astNode as VariableDeclare, env, (astNode as VariableDeclare).constant);
         case "Assignment Expr":
-            return eval_assignments_expr(astNode as AssignmentExpr, env)
-        default:
+            return eval_assignments_expr(astNode as AssignmentExpr, env);
+        case "ObjectLiteral":
+            return eval_object(astNode as ObjectLiteral, env);
+        case "BooleanLiteral":
+            return MK_BOOL((astNode as BooleanLiteral).value)
+            default:
             throw new Error(`This AST Node has not yet been setup for interpretation, ${astNode}`)
 
     }

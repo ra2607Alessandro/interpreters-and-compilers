@@ -8,6 +8,7 @@ import {
   NumericLiteral,
   ObjectLiteral,
   Program,
+  BooleanLiteral,
   Property,
   Stat,
   VariableDeclare,
@@ -233,6 +234,13 @@ export default class Parser {
         this.eat(); // advance past null 
         return { kind: "NullLiteral", value: "null"} as NullLiteral;
 
+      // Add to parser2.ts in the parse_primary_expr() method
+      case TokenType.Boolean:
+        return {
+        kind: "BooleanLiteral",
+        value: this.eat().value === "true"
+        } as BooleanLiteral;
+
       // Constants and Numeric Constants
       case TokenType.Number:
         return {
@@ -249,6 +257,8 @@ export default class Parser {
           "Unexpected token found inside parenthesised expression. Expected closing parenthesis.",
         ); // closing paren
         return value;
+
+      
       }
 
       // Unidentified Tokens and Invalid Code Reached
