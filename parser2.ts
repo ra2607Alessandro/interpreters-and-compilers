@@ -14,11 +14,13 @@ import {
   VariableDeclare,
   CallExpr,
   Member,
+  FunctionDeclare,
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
 import { env } from "process";
 import { evaluate } from "./interpreter";
+import { FunctionCall } from "./value";
 
 /**
  * Frontend for producing a valid AST from sourcode
@@ -98,18 +100,57 @@ export default class Parser {
 
   }
 
+
+  private parse_fn_declaration(): Stat {
+    const fn = this.eat();
+    const name  = this.expect(TokenType.Identifier, "Function has to have a name declared").value;
+    const args = this.parse_args();
+
+    const params : string[] = [];
+    for (const arg of args) {
+      if (arg.kind !== "Identifier")
+       { console.log(arg)
+        throw new Error ("Only strings or identifiers are accepted in the parameters of a function")
+           }  
+        params.push((arg as Identifier).symbol)
+          
+    }
+    
+
+    this.expect(TokenType.OpenBrace, "A function needs to be opened with an open brace")
+
+    const body_list = []
+    while (TokenType.EOF && TokenType.CloseBrace) {
+       const body = this.parse_stmt()
+       body_list.push(body)
+    }
+    
+    return {
+      kind: "FunctionDeclare",
+      name: name,
+      parameters: params,
+      body: body_list
+ 
+    } as FunctionDeclare
+  }
+
   // Handle complex statement types
   private parse_stmt(): Stat {
     // skip to parse_expr
-    const current = this.at();
-    if (!current) {
-      throw new Error("Unexpected end of input")
+    
+    const current = this.at()!.value
+    switch(current) {
+      case "let":
+        return this.parse_declaration();
+      case "const":
+        return this.parse_declaration();
+      case "fn":
+        return this.parse_fn_declaration();
+      default: 
+        throw "Need to insert a specified value"
     }
 
-    if (this.at()!.value === "let" || this.at()!.value === "const") {
-        return this.parse_declaration()
-    }
-    else {return this.parse_expr();}
+
   }
 
 

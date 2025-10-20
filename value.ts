@@ -1,8 +1,8 @@
-import { Expr } from "./ast";
+import { Expr, FunctionDeclare, Stat } from "./ast";
 import { Environment } from "./environment";
 
 
-export type ValueType = "null" | "number" | "string" | "boolean" | "object" | "native-function";
+export type ValueType = "null" | "number" | "string" | "boolean" | "object" | "native-function" | "user-function";
 
 
 export interface RuntimeVal {
@@ -43,9 +43,21 @@ export interface NativeFunction extends RuntimeVal {
     call: FunctionCall
 }
 
+export interface UserFunction extends RuntimeVal {
+    type: "user-function",
+    name: string,
+    parameters: string[],
+    body: Stat[],
+    declarationENV: Environment
+}
+
+
 export function MK_NTV_FUNCTION(b: FunctionCall): NativeFunction {
     return {type: "native-function", call: b};
 }
 export function MK_BOOL(b: boolean): BooleanVal {
     return {type: "boolean", value: b};
+}
+export function MK_NULL(): NullValue {
+   return {type: "null", value: null};
 }

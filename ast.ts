@@ -1,7 +1,8 @@
-import { TokenType } from "./lexer";
+import { Token, TokenType } from "./lexer";
+import { FunctionCall } from "./value";
 
 
-export type NodeType = "Program" | "NumericLiteral" | "NullLiteral" | "BooleanLiteral" | "Identifier" | "BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
+export type NodeType = "Program" | "NumericLiteral" | "NullLiteral" | "BooleanLiteral" | "Identifier" | "FunctionDeclare" |"BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
 
 export interface Stat {
     kind: NodeType
@@ -18,6 +19,13 @@ export interface BinaryExpr extends Stat {
     left: Expr,
     right: Expr,
     operator: string
+}
+
+export interface FunctionDeclare extends Stat {
+    kind: "FunctionDeclare",
+    name: string,
+    parameters: string[],
+    body: Stat[]
 }
 
 export interface AssignmentExpr extends Stat {

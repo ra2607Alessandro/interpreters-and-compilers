@@ -1,5 +1,5 @@
-import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL, MK_NTV_FUNCTION, FunctionCall, NativeFunction } from "./value";
-import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, Identifier, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, VariableDeclare } from "./ast";
+import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction } from "./value";
+import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, FunctionDeclare, Identifier, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, VariableDeclare } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
 import { constants } from "buffer";
@@ -83,15 +83,44 @@ function evaluate_call_expr(call: CallExpr, env: Environment): RuntimeVal {
 
     const args  = call.arg.map( (argv) => evaluate(argv, env) )  
     const caller = evaluate(call.calle, env) 
-    if (caller.type !== "native-function") {
-        throw "wtf, this is supposed to be a function"
+   
+    if (caller.type === "native-function") {
+        const result = (caller as NativeFunction ).call(args, env)
+        return result
     }
-    const result = (caller as NativeFunction ).call(args, env)
+    
+    if ( caller.type === "user-function") {
+        const func = caller as UserFunction;
+        const scope = new Environment(func.declarationENV);
 
-    return result
+        for (let i = 0; i < func.parameters.length ; i++ ) {
+          const varname = func.parameters[i];
+          scope.declareVar(varname, args[i], false);
+        }
 
+        let results : RuntimeVal = MK_NULL();
+         for (const stat of func.body) {
+           results = evaluate(stat, scope)
+        }
+        return results
+    }
+    
+    throw "Cannot call bro. This value is not a function"
     
     }
+
+function eval_declare_fn(fn: FunctionDeclare, env: Environment): RuntimeVal {
+    const obj = {
+    type: "user-function",
+    name: fn.name,
+    parameters: fn.parameters,
+    body: fn.body
+    } as UserFunction
+
+    return  env.declareVar(fn.name, obj , true)
+}
+
+
 
 export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
     switch(astNode.kind) {
@@ -111,8 +140,10 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
             return eval_assignments_expr(astNode as AssignmentExpr, env);
         case "ObjectLiteral":
             return eval_object(astNode as ObjectLiteral, env);
+        case "FunctionDeclare":
+            return eval_declare_fn((astNode as FunctionDeclare), env)
         case "CallExpr":
-            return evaluate_call_expr(astNode as CallExpr, env)
+            return evaluate_call_expr(astNode as CallExpr, env);
         case "BooleanLiteral":
             return MK_BOOL((astNode as BooleanLiteral).value)
             default:

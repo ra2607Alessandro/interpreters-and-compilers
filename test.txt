@@ -1,1 +1,4 @@
-print(45)
+fn add (x: 45, y: 45)  {
+   let result = x + y 
+   print(result)  
+  }

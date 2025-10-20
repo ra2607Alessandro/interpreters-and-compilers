@@ -5,11 +5,13 @@ export class Environment {
     private parent?: Environment;
     private variables: Map<string, RuntimeVal>;
     private constants: Set<string>
+    
 
     constructor(parentENV ?: Environment){
         this.parent = parentENV,
         this.variables = new Map(),
         this.constants = new Set()
+        
     } 
 
     public declareVar(varname: string, value: RuntimeVal, constant: boolean): RuntimeVal {
