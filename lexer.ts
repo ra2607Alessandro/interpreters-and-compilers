@@ -6,10 +6,13 @@ export enum TokenType {
     Equals,
     Comma,
     Colon,
+    Dot,
     Openparen, 
     Closeparen, 
     OpenBrace,
     CloseBrace,
+    OpenSquare,
+    CloseSquare,
     BinaryOper,
     Boolean,
     Let,
@@ -49,7 +52,7 @@ function isInt(str: string){
 }
 
 function isSkippable(STR: string) {
-    return STR == " " || STR== "\n" || STR == "\t"
+    return STR == " " || STR== "\n" || STR == "\t" ||  STR == "\r"
 }
 
 export function tokenize(sourceCode: string): Token[]{
@@ -70,11 +73,20 @@ export function tokenize(sourceCode: string): Token[]{
     else if (src[0] == "{") {
         tokens.push(token(src.shift()!, TokenType.OpenBrace));
     }
+    else if (src[0] == "[") {
+       tokens.push(token(src.shift()!, TokenType.OpenSquare))
+    }
+    else if (src[0] == "]") {
+        tokens.push(token(src.shift()!, TokenType.CloseSquare))
+    }
     else if (src[0] == ",") {
         tokens.push(token(src.shift()!, TokenType.Comma));
     }
     else if (src[0] == ":") {
         tokens.push(token(src.shift()!, TokenType.Colon));
+    }
+    else if (src[0] == ".") {
+       tokens.push(token(src.shift()!, TokenType.Dot))
     }
     else if (src[0] == "true" || src[0] == "false"){
         tokens.push(token(src.shift()!, TokenType.Boolean))

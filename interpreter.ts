@@ -1,8 +1,9 @@
-import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL } from "./value";
-import { AssignmentExpr, BinaryExpr, BooleanLiteral, Identifier, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, VariableDeclare } from "./ast";
+import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL, MK_NTV_FUNCTION, FunctionCall, NativeFunction } from "./value";
+import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, Identifier, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, VariableDeclare } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
 import { constants } from "buffer";
+import { argv } from "process";
 
 function eval_program(program: Program, env: Environment):RuntimeVal {
     let last_astNode : RuntimeVal = {
@@ -78,6 +79,20 @@ function eval_object(obj: ObjectLiteral, env: Environment): RuntimeVal {
 
 }
 
+function evaluate_call_expr(call: CallExpr, env: Environment): RuntimeVal {
+
+    const args  = call.arg.map( (argv) => evaluate(argv, env) )  
+    const caller = evaluate(call.calle, env) 
+    if (caller.type !== "native-function") {
+        throw "wtf, this is supposed to be a function"
+    }
+    const result = (caller as NativeFunction ).call(args, env)
+
+    return result
+
+    
+    }
+
 export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
     switch(astNode.kind) {
         case "NumericLiteral":
@@ -96,6 +111,8 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
             return eval_assignments_expr(astNode as AssignmentExpr, env);
         case "ObjectLiteral":
             return eval_object(astNode as ObjectLiteral, env);
+        case "CallExpr":
+            return evaluate_call_expr(astNode as CallExpr, env)
         case "BooleanLiteral":
             return MK_BOOL((astNode as BooleanLiteral).value)
             default:

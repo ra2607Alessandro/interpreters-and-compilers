@@ -12,6 +12,8 @@ import {
   Property,
   Stat,
   VariableDeclare,
+  CallExpr,
+  Member,
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
@@ -197,12 +199,12 @@ export default class Parser {
 
   // Handle Multiplication, Division & Modulo Operations
   private parse_multiplicative_expr(): Expr {
-    let left = this.parse_primary_expr();
+    let left = this.parse_call_member_expr();
 
     while (this.at()! && (this.at()!.value === "/" || this.at()!.value === "*" || this.at()!.value === "%")
     ) {
       const operator = this.eat().value;
-      const right = this.parse_primary_expr();
+      const right = this.parse_call_member_expr();
       left = {
         kind: "BinaryExpr",
         left,
@@ -214,6 +216,75 @@ export default class Parser {
     return left;
   }
 
+  private parse_call_member_expr(): Expr {
+   const expression = this.parse_member_expr();
+
+   if (this.at()!.type == TokenType.Openparen) {
+    return this.parse_call_expr(expression)
+   }
+
+   return expression
+    }
+
+  private parse_call_expr(callee: Expr): Expr {
+    let call_expr : Expr = {kind: "CallExpr", calle: callee, arg: this.parse_args() } as CallExpr;
+
+    if (this.at()!.type == TokenType.Openparen) {
+    call_expr = this.parse_call_expr(call_expr)
+    }
+
+    return call_expr
+   
+  }
+
+  private parse_args(): Expr[] {
+    this.expect(TokenType.Openparen, "You need to open the parenthesis man");
+    const args = this.at()!.type == TokenType.Closeparen ? [] : this.parse_list_args()
+    this.expect(TokenType.Closeparen, "You need to close the parenthesis")
+    return args
+
+    
+  }
+
+  private parse_list_args(): Expr[] {
+    const args = [this.parse_assignment_expr()]
+    while (this.at()!.type == TokenType.Comma && this.eat()) {
+      
+      args.push(this.parse_assignment_expr())
+    }
+
+    return args
+
+
+  }
+
+  private parse_member_expr(): Expr {
+    let obj = this.parse_primary_expr();
+
+    while (this.at()!.type == TokenType.Dot || this.at()!.type == TokenType.OpenSquare) {
+      let operator = this.eat();
+      let property : Expr ;
+      let isComputed : boolean 
+
+      if (operator.type == TokenType.Dot) {
+        isComputed = false;
+        property = this.parse_primary_expr() 
+        if (property.kind !== "Identifier") {
+          throw new Error ("there has to be an identifier or i won't understand shit!")
+        }
+      } 
+      else {
+          isComputed = true;
+          property = this.parse_expr()
+          this.expect(TokenType.CloseSquare, "Bro... as in like: Close the fucking square bracket")
+        }
+      
+    
+      obj = { kind : "Member", isComputed,  property} as Member
+      }
+    return obj 
+  
+  }
   // Orders Of Precedence
   // AdditiveExpr
   // MultiplicativeExpr
@@ -238,7 +309,7 @@ export default class Parser {
       case TokenType.Boolean:
         return {
         kind: "BooleanLiteral",
-        value: this.eat().value === "true"
+        value: this.eat().value === "true" || this.eat().value === "false" 
         } as BooleanLiteral;
 
       // Constants and Numeric Constants
@@ -260,7 +331,7 @@ export default class Parser {
 
       
       }
-
+      
       // Unidentified Tokens and Invalid Code Reached
       default:
         console.log(this.at())

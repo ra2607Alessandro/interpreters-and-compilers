@@ -1,6 +1,8 @@
+import { Expr } from "./ast";
+import { Environment } from "./environment";
 
 
-export type ValueType = "null" | "number" | "string" | "boolean" | "object";
+export type ValueType = "null" | "number" | "string" | "boolean" | "object" | "native-function";
 
 
 export interface RuntimeVal {
@@ -33,6 +35,17 @@ export interface ObjectValue extends RuntimeVal {
     properties: Map<string, RuntimeVal>;
 }
 
+
+export type FunctionCall = (args: RuntimeVal[], env: Environment) => RuntimeVal 
+
+export interface NativeFunction extends RuntimeVal {
+    type: "native-function",
+    call: FunctionCall
+}
+
+export function MK_NTV_FUNCTION(b: FunctionCall): NativeFunction {
+    return {type: "native-function", call: b};
+}
 export function MK_BOOL(b: boolean): BooleanVal {
     return {type: "boolean", value: b};
 }

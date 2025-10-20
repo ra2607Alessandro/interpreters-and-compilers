@@ -2,7 +2,7 @@ import Parser from "./parser2";
 import promptSync = require('prompt-sync');
 import { evaluate } from "./interpreter";
 import { Environment } from "./environment";
-import { NumValue, BooleanVal } from "./value";
+import { NumValue, BooleanVal, MK_NTV_FUNCTION , FunctionCall } from "./value";
 const prompt = promptSync();
 
 
@@ -11,7 +11,13 @@ repl();
 function repl() {
   const parser = new Parser();
   const env = new Environment();
- 
+   env.declareVar("print", MK_NTV_FUNCTION((args, scope) => {
+    console.log(args[0]);
+    return {type: "null", value: null}
+    
+
+  }), true)
+
   console.log("\nRepl v0.1");
 
   // Continue Repl Until User Stops Or Types `exit`
