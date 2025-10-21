@@ -8,12 +8,17 @@ import { MK_NTV_FUNCTION } from "./value";
 const src = fs.readFileSync("./test.txt", "utf-8")
 
 const env = new Environment();
-env.declareVar( "print", MK_NTV_FUNCTION((args, scope) => {
-    console.log(args[0]); return {type: "null", value: null}})
-, true)
+env.declareVar("print", MK_NTV_FUNCTION((args, scope) => {
+    if (args[0]) {
+       console.log(args[0])
+       return {type: args[0].type}
+    }
+    return {type: "null", value: null}
+}), true)
 const parser = new Parser(); 
 const ast = parser.produceAST(src)
 const result = evaluate(ast , env)
+
 
 
 console.log(result)
