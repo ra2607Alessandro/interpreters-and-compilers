@@ -2,10 +2,15 @@ import { Token, TokenType } from "./lexer";
 import { FunctionCall } from "./value";
 
 
-export type NodeType = "Program" | "NumericLiteral" | "NullLiteral" | "BooleanLiteral" | "Identifier" | "FunctionDeclare" |"BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
+export type NodeType = "ExpressionStatement" | "Program" | "NumericLiteral" | "NullLiteral" | "BooleanLiteral" | "Identifier" | "FunctionDeclare" |"BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
 
 export interface Stat {
     kind: NodeType
+}
+
+export interface ExpressionStatement {
+    kind: "ExpressionStatement";
+    expression: Expr;
 }
 
 export interface Program {
@@ -88,4 +93,8 @@ export interface Member extends Expr {
 }
 
 
+export function MK_PROGRAM(b: any): Program {
+    return { kind: "Program",
+    body: b } 
 
+} 

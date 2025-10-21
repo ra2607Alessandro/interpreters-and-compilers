@@ -92,12 +92,15 @@ function eval_declare_fn(fn, env) {
         type: "user-function",
         name: fn.name,
         parameters: fn.parameters,
-        body: fn.body
+        body: fn.body,
+        declarationENV: env
     };
     return env.declareVar(fn.name, obj, true);
 }
 function evaluate(astNode, env) {
     switch (astNode.kind) {
+        case "ExpressionStatement":
+            return evaluate(astNode.expression, env);
         case "NumericLiteral":
             return { value: (astNode.value), type: "number", };
         case "Identifier":

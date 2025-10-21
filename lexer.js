@@ -13,7 +13,7 @@ var TokenType;
     TokenType[TokenType["Comma"] = 4] = "Comma";
     TokenType[TokenType["Colon"] = 5] = "Colon";
     TokenType[TokenType["Dot"] = 6] = "Dot";
-    TokenType[TokenType["Functon"] = 7] = "Functon";
+    TokenType[TokenType["Function"] = 7] = "Function";
     TokenType[TokenType["Openparen"] = 8] = "Openparen";
     TokenType[TokenType["Closeparen"] = 9] = "Closeparen";
     TokenType[TokenType["OpenBrace"] = 10] = "OpenBrace";
@@ -32,7 +32,7 @@ var KEYWORDS = {
     "null": TokenType.Null,
     "true": TokenType.Boolean,
     "false": TokenType.Boolean,
-    "fn": TokenType.Functon
+    "fn": TokenType.Function
 };
 function token(value, type) {
     return { value: value, type: type };
@@ -82,7 +82,7 @@ function tokenize(sourceCode) {
             tokens.push(token(src.shift(), TokenType.Dot));
         }
         else if (src[0] == "fn") {
-            tokens.push(token(src.shift(), TokenType.Functon));
+            tokens.push(token(src.shift(), TokenType.Function));
         }
         else if (src[0] == "true" || src[0] == "false") {
             tokens.push(token(src.shift(), TokenType.Boolean));

@@ -79,10 +79,11 @@ var Parser = /** @class */ (function () {
         }
         this.expect(lexer_1.TokenType.OpenBrace, "A function needs to be opened with an open brace");
         var body_list = [];
-        while (lexer_1.TokenType.EOF && lexer_1.TokenType.CloseBrace) {
+        while (this.not_eof() && this.at().type !== lexer_1.TokenType.CloseBrace) {
             var body = this.parse_stmt();
             body_list.push(body);
         }
+        this.expect(lexer_1.TokenType.CloseBrace, "You need to close the brace man");
         return {
             kind: "FunctionDeclare",
             name: name,
@@ -93,16 +94,19 @@ var Parser = /** @class */ (function () {
     // Handle complex statement types
     Parser.prototype.parse_stmt = function () {
         // skip to parse_expr
-        var current = this.at().value;
+        var current = this.at().type;
         switch (current) {
-            case "let":
+            case lexer_1.TokenType.Let:
                 return this.parse_declaration();
-            case "const":
+            case lexer_1.TokenType.Const:
                 return this.parse_declaration();
-            case "fn":
+            case lexer_1.TokenType.Function:
                 return this.parse_fn_declaration();
             default:
-                throw "Need to insert a specified value";
+                return {
+                    kind: "ExpressionStatement",
+                    expression: this.parse_expr()
+                };
         }
     };
     Parser.prototype.parse_object = function () {

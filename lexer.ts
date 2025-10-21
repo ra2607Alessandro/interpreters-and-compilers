@@ -7,7 +7,7 @@ export enum TokenType {
     Comma,
     Colon,
     Dot,
-    Functon,
+    Function,
     Openparen, 
     Closeparen, 
     OpenBrace,
@@ -32,7 +32,7 @@ const KEYWORDS : Record<string, TokenType> = {
     "null" : TokenType.Null,
     "true" : TokenType.Boolean,
     "false" : TokenType.Boolean,
-    "fn": TokenType.Functon
+    "fn": TokenType.Function
 }
 
 export function token(value: string, type: TokenType):Token {
@@ -91,7 +91,7 @@ export function tokenize(sourceCode: string): Token[]{
        tokens.push(token(src.shift()!, TokenType.Dot))
     }
     else if (src[0] == "fn") {
-       tokens.push(token(src.shift()!, TokenType.Functon)) 
+       tokens.push(token(src.shift()!, TokenType.Function)) 
     }
     else if (src[0] == "true" || src[0] == "false"){
         tokens.push(token(src.shift()!, TokenType.Boolean))

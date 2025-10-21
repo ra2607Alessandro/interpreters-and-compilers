@@ -1,5 +1,5 @@
 import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction } from "./value";
-import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, FunctionDeclare, Identifier, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, VariableDeclare } from "./ast";
+import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, ExpressionStatement, FunctionDeclare, Identifier, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, VariableDeclare } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
 import { constants } from "buffer";
@@ -114,7 +114,8 @@ function eval_declare_fn(fn: FunctionDeclare, env: Environment): RuntimeVal {
     type: "user-function",
     name: fn.name,
     parameters: fn.parameters,
-    body: fn.body
+    body: fn.body,
+    declarationENV: env
     } as UserFunction
 
     return  env.declareVar(fn.name, obj , true)
@@ -124,6 +125,8 @@ function eval_declare_fn(fn: FunctionDeclare, env: Environment): RuntimeVal {
 
 export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
     switch(astNode.kind) {
+        case "ExpressionStatement":
+            return evaluate((astNode as ExpressionStatement).expression, env)
         case "NumericLiteral":
              return {value: ((astNode as NumericLiteral).value),type: "number",} as NumValue;
         case "Identifier":

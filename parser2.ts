@@ -1,5 +1,6 @@
 import { error } from "console";
 import {
+  ExpressionStatement,
   AssignmentExpr,
   BinaryExpr,
   Expr,
@@ -113,17 +114,17 @@ export default class Parser {
         throw new Error ("Only strings or identifiers are accepted in the parameters of a function")
            }  
         params.push((arg as Identifier).symbol)
-          
     }
-    
 
     this.expect(TokenType.OpenBrace, "A function needs to be opened with an open brace")
 
     const body_list = []
-    while (TokenType.EOF && TokenType.CloseBrace) {
+    while (this.not_eof() && this.at()!.type !== TokenType.CloseBrace) {
        const body = this.parse_stmt()
        body_list.push(body)
     }
+
+    this.expect(TokenType.CloseBrace, "You need to close the brace man")
     
     return {
       kind: "FunctionDeclare",
@@ -138,16 +139,19 @@ export default class Parser {
   private parse_stmt(): Stat {
     // skip to parse_expr
     
-    const current = this.at()!.value
+    const current = this.at()!.type
     switch(current) {
-      case "let":
+      case TokenType.Let:
         return this.parse_declaration();
-      case "const":
+      case TokenType.Const:
         return this.parse_declaration();
-      case "fn":
+      case TokenType.Function:
         return this.parse_fn_declaration();
       default: 
-        throw "Need to insert a specified value"
+        return {
+          kind: "ExpressionStatement",
+          expression: this.parse_expr()
+        } as ExpressionStatement
     }
 
 
@@ -284,7 +288,6 @@ export default class Parser {
     this.expect(TokenType.Closeparen, "You need to close the parenthesis")
     return args
 
-    
   }
 
   private parse_list_args(): Expr[] {
@@ -369,8 +372,6 @@ export default class Parser {
           "Unexpected token found inside parenthesised expression. Expected closing parenthesis.",
         ); // closing paren
         return value;
-
-      
       }
       
       // Unidentified Tokens and Invalid Code Reached
