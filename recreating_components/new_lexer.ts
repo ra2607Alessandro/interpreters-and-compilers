@@ -6,7 +6,8 @@ export enum AllTokens {
     Equal,
     LET,
     CONST,
-    Comma
+    Comma,
+    END
 }
 
 export interface Token {
