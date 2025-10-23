@@ -97,6 +97,3 @@ export function lexer(source_code: string): Token[] {
 
 }
 
-const string = "let continents = 45";
-console.log(lexer(string))
-
