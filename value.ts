@@ -61,3 +61,6 @@ export function MK_BOOL(b: boolean): BooleanVal {
 export function MK_NULL(): NullValue {
    return {type: "null", value: null};
 }
+
+
+ 
