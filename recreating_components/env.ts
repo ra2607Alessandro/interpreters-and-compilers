@@ -41,11 +41,16 @@ export class Env {
        throw new Error (`Couldn't find the value ${name}`)
        
     }
+    update (name: string, value: any) {
+        if(this.variabs.has(name))
+        {this.variabs.set(name,value)}
+        else {
+            this.variabs.set(name, value)
+        }
+    }
 }
 
-const global = new Env();
-global.define("x", 10);
-const local = new Env(global);
-local.define("y", 20); 
-local.assign("x", 100);  // Updates global.x
-console.log(local.lookup("y")); // 100
+const env = new Env();
+env.update("a", 20);
+env.update("a", 87)
+console.log(env.lookup("a"))
