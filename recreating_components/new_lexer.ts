@@ -6,6 +6,7 @@ export enum AllTokens {
     Equal,
     LET,
     CONST,
+    BinaryOp,
     Comma,
     END
 }
@@ -65,6 +66,9 @@ export function lexer(source_code: string): Token[] {
         }
         else if (src[0]! == "=") {
             stat.push(makeToken(src.shift()!, AllTokens.Equal))
+        }
+        else if (src[0]! == "+" || src[0]! == "-" || src[0]! == "*" || src[0]! == "/" ){
+             stat.push(makeToken(src.shift()!, AllTokens.BinaryOp))
         }
         else 
         if (IsAlphanumeric(src[0]!)) {
