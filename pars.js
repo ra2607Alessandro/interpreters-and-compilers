@@ -72,5 +72,5 @@ var Parsing = /** @class */ (function () {
 exports.Parsing = Parsing;
 var parser = new Parsing();
 var string = "let continents = 45";
-var nor = parser.ProduceAST(JSON.stringify(string, null, 2));
-console.log(nor);
+var nor = parser.ProduceAST(string); // ✅ Passes the string directly
+console.log(JSON.stringify(nor, null, 2)); // ✅ Stringifies the RESULT

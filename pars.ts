@@ -119,6 +119,5 @@ export class Parsing {
 
 const parser = new Parsing();
 const string = "let continents = 45"
-
-const nor = parser.ProduceAST(JSON.stringify(string, null, 2))
-console.log(nor)
+const nor = parser.ProduceAST(string)  // ✅ Passes the string directly
+console.log(JSON.stringify(nor, null, 2))  // ✅ Stringifies the RESULT
