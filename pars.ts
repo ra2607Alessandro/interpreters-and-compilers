@@ -10,11 +10,21 @@ interface Statement {
 
 }
 
-interface Expr  { 
-    n1: AllTokens.Number,
-    operator?: AllTokens.BinaryOp,
-    n2: AllTokens.Number
- }
+interface Expr {
+    kind: string
+}
+
+interface NumericLiteral extends Expr {
+    kind: "NumericLiteral",
+    value: number
+}
+
+interface BinaryExpr extends Expr {
+    kind: "BinaryExpression",
+    n1: number,
+    operator: string,
+    n2: number
+}
 
 
 interface VariableDeclare extends Statement {
@@ -29,7 +39,7 @@ export class Parsing {
 
 
     private not_complete() {
-        return  this.at()!.token !== AllTokens.END
+        return  this.Tokens.length > 0 && this.Tokens[0]!.token !== AllTokens.END
     }
 
     private at() {
@@ -82,12 +92,12 @@ export class Parsing {
     const next = this.eat()!
     if ( next.token == AllTokens.BinaryOp && this.not_complete()){
         const second = this.expect(AllTokens.Number, "Expression can only take in a number")
-        return { n1: val.token, operator: next.token, n2: second.token  } as Expr
+        return {kind: "BinaryExpression" , n1: parseFloat(val.value), operator: next.value, n2: parseFloat(second.value) } as BinaryExpr
     }
     else
    {
-    return {n1: val.token} as Expr}
-    
+    return {kind: "NumericLiteral", value: parseFloat(val.value)} as NumericLiteral
+   }
   }
 
     private parse_var_declaration(){
@@ -95,7 +105,7 @@ export class Parsing {
     this.eat()
     const ident = this.expect(AllTokens.Identifier, `Expected value after variable declaration is an Identifier, not: ${this.at().token}`).value; 
     this.expect(AllTokens.Equal, `Expected token is ' = ' , not: ${this.at().value} `);
-    const value = this.parse_value();
+    const value = this.parse_value()!;
     return {
         kind: "Variable-Declaration",
         isCostant,
@@ -109,5 +119,6 @@ export class Parsing {
 
 const parser = new Parsing();
 const string = "let continents = 45"
-const nor = parser.ProduceAST(string)
+
+const nor = parser.ProduceAST(JSON.stringify(string, null, 2))
 console.log(nor)

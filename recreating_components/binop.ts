@@ -1,8 +1,6 @@
 import { constants } from "buffer";
 
-type Expr = 
-    | { kind: "Number", value: number }
-    | { kind: "BinaryOp", left: Expr, op: string, right: Expr };
+
 
 function evaluate(expr: Expr):number {
 

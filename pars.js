@@ -7,7 +7,7 @@ var Parsing = /** @class */ (function () {
         this.Tokens = [];
     }
     Parsing.prototype.not_complete = function () {
-        return this.at().token !== new_lexer_1.AllTokens.END;
+        return this.Tokens.length > 0 && this.Tokens[0].token !== new_lexer_1.AllTokens.END;
     };
     Parsing.prototype.at = function () {
         return this.Tokens[0];
@@ -48,10 +48,10 @@ var Parsing = /** @class */ (function () {
         var next = this.eat();
         if (next.token == new_lexer_1.AllTokens.BinaryOp && this.not_complete()) {
             var second = this.expect(new_lexer_1.AllTokens.Number, "Expression can only take in a number");
-            return { n1: val.token, operator: next.token, n2: second.token };
+            return { kind: "BinaryExpression", n1: parseFloat(val.value), operator: next.value, n2: parseFloat(second.value) };
         }
         else {
-            return { n1: val.token };
+            return { kind: "NumericLiteral", value: parseFloat(val.value) };
         }
     };
     Parsing.prototype.parse_var_declaration = function () {
@@ -72,5 +72,5 @@ var Parsing = /** @class */ (function () {
 exports.Parsing = Parsing;
 var parser = new Parsing();
 var string = "let continents = 45";
-var nor = parser.ProduceAST(string);
+var nor = parser.ProduceAST(JSON.stringify(string, null, 2));
 console.log(nor);
