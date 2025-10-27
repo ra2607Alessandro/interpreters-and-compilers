@@ -1,6 +1,8 @@
 import { constants } from "buffer";
 
-
+type Expr = 
+           | {kind: "Number", value: number} 
+           | {kind: "BinaryOp", left: Expr, operator: string, right: Expr}
 
 function evaluate(expr: Expr):number {
 
@@ -13,7 +15,7 @@ function evaluate(expr: Expr):number {
         const leftval = evaluate(expr.left);
         const rightval = evaluate(expr.right); 
         
-        switch(expr.op){
+        switch(expr.operator){
             case "+":
                 return leftval + rightval;
             case "-":
@@ -23,7 +25,7 @@ function evaluate(expr: Expr):number {
             case "/":
                 return leftval * rightval;
             default:
-                throw `the operator sign ${expr.op} is not supported`
+                throw `the operator sign ${expr.operator} is not supported`
 
         }
     }
@@ -39,8 +41,8 @@ function evaluate(expr: Expr):number {
 
 const Test : Expr = {
     kind: "BinaryOp",
-    left: {kind: "BinaryOp", left: {kind: "Number", value: 5}, op: "+", right: {kind: "Number", value: 3}},
-    op: "*",
+    left: {kind: "BinaryOp", left: {kind: "Number", value: 5}, operator: "+", right: {kind: "Number", value: 3}},
+    operator: "*",
     right: {kind: "Number", value: 2}
 
 }
