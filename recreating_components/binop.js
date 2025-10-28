@@ -16,7 +16,7 @@ function eval_stmt(stmt, env) {
         var var_dec = stmt;
         var value = eval_expr(var_dec.value);
         env.define(var_dec.ident, value);
-        return env;
+        return value;
     }
 }
 function eval_expr(expr) {

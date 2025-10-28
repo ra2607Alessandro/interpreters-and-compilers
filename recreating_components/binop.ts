@@ -25,7 +25,7 @@ export function eval_stmt(stmt: Statement, env: Env):any {
         {   const var_dec = stmt as VariableDeclare;
             const value = eval_expr( var_dec.value as Expr);
             env.define(var_dec.ident, value);
-            return env;
+            return value;
     } 
 }
 
