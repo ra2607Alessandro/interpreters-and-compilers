@@ -6,7 +6,7 @@ import { stat } from "fs";
 
 export type Expr = 
            | {kind: "Number", value: number} 
-           | {kind: "BinaryOp", left: Expr, operator: string, right: Expr}
+           | {kind: "BinaryExpression", left: Expr, operator: string, right: Expr}
 
 
 
@@ -23,22 +23,22 @@ export function evaluate(program: Program, env: Env): any {
 export function eval_stmt(stmt: Statement, env: Env):any {
     if (stmt.kind === "Variable-Declaration" )
         {   const var_dec = stmt as VariableDeclare
-            const value = eval_expr( var_dec.value as Expr, env);
-            env.define(var_dec.ident, var_dec.value);
+            const value = eval_expr( var_dec.value as Expr);
+            env.define(var_dec.ident, value);
             return env
     } 
 }
 
-export function eval_expr(expr: Expr, env: Env):number {
+export function eval_expr(expr: Expr):number {
 
     if ( expr.kind === "Number"){
         return expr.value
     }
 
-    if (expr.kind === "BinaryOp" )
+    if (expr.kind === "BinaryExpression" )
         {
-        const leftval = eval_expr(expr.left, env);
-        const rightval = eval_expr(expr.right, env); 
+        const leftval = eval_expr(expr.left);
+        const rightval = eval_expr(expr.right); 
         
         switch(expr.operator){
             case "+":
