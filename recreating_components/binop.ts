@@ -22,9 +22,9 @@ export function evaluate(program: Program, env: Env): any {
 
 export function eval_stmt(stmt: Statement, env: Env):any {
     if (stmt.kind === "Variable-Declaration" )
-        {   const var_dec = stmt as VariableDeclare;
-            const value = eval_expr( var_dec.value , env);
-            env.define(var_dec.kind, var_dec);
+        {   const var_dec = stmt as VariableDeclare
+            const value = eval_expr( var_dec.value as Expr, env);
+            env.define(var_dec.ident, var_dec.value);
             return env
     } 
 }
