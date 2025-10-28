@@ -22,16 +22,16 @@ export function evaluate(program: Program, env: Env): any {
 
 export function eval_stmt(stmt: Statement, env: Env):any {
     if (stmt.kind === "Variable-Declaration" )
-        {   const var_dec = stmt as VariableDeclare
+        {   const var_dec = stmt as VariableDeclare;
             const value = eval_expr( var_dec.value as Expr);
             env.define(var_dec.ident, value);
-            return env
+            return env;
     } 
 }
 
 export function eval_expr(expr: Expr):number {
 
-    if ( expr.kind === "Number"){
+    if (expr.kind === "Number"){
         return expr.value
     }
 

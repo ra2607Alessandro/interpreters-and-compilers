@@ -48,7 +48,10 @@ var Parsing = /** @class */ (function () {
         var next = this.eat();
         if (next.token == new_lexer_1.AllTokens.BinaryOp && this.not_complete()) {
             var second = this.expect(new_lexer_1.AllTokens.Number, "Expression can only take in a number");
-            return { kind: "BinaryExpression", n1: { kind: "Number", value: parseFloat(val.value) }, operator: next.value, n2: { kind: "Number", value: parseFloat(second.value) } };
+            return { kind: "BinaryExpression",
+                left: { kind: "Number", value: parseFloat(val.value) },
+                operator: next.value,
+                right: { kind: "Number", value: parseFloat(second.value) } };
         }
         else {
             return { kind: "Number", value: parseFloat(val.value) };

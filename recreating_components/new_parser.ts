@@ -11,7 +11,7 @@ export interface Statement {
 }
 
 export interface Expr {
-    kind: string
+    kind: string,
 }
 
 interface NumericLiteral extends Expr {
@@ -21,9 +21,9 @@ interface NumericLiteral extends Expr {
 
 interface BinaryExpr extends Expr {
     kind: "BinaryExpression",
-    n1:  NumericLiteral,
+    left:  NumericLiteral,
     operator: string,
-    n2: NumericLiteral
+    right: NumericLiteral
 }
 
 
@@ -92,7 +92,10 @@ export class Parsing {
     const next = this.eat()!
     if ( next.token == AllTokens.BinaryOp && this.not_complete()){
         const second = this.expect(AllTokens.Number, "Expression can only take in a number")
-        return {kind: "BinaryExpression" , n1: {kind: "Number", value: parseFloat(val.value)}, operator: next.value, n2: {kind: "Number", value: parseFloat(second.value)} } as BinaryExpr
+        return {kind: "BinaryExpression" , 
+               left: {kind: "Number", value: parseFloat(val.value)}, 
+               operator: next.value, 
+               right: {kind: "Number", value: parseFloat(second.value)} } as BinaryExpr
     }
     else
    {
