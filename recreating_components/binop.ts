@@ -1,6 +1,7 @@
 import { constants } from "buffer";
 import { Env } from "./env";
 import { Program, Statement, VariableDeclare } from "./new_parser";
+import { stat } from "fs";
 
 
 export type Expr = 
@@ -10,15 +11,23 @@ export type Expr =
 
 
 export function evaluate(program: Program, env: Env): any {
-    return eval_stmt(program, env)
+    let last_result  = undefined ;
+
+    for ( const stat of program.body){
+    last_result = eval_stmt(stat, env)
+    
+    }
+    return last_result
 }
 
 export function eval_stmt(stmt: Statement, env: Env):any {
-    if (stmt.kind=="Variable-Declare")
-        {   const var_dec = stmt as VariableDeclare
-            return eval_expr(var_dec.value, env)} 
+    if (stmt.kind === "Variable-Declaration" )
+        {   const var_dec = stmt as VariableDeclare;
+            const value = eval_expr( var_dec.value , env);
+            env.define(var_dec.kind, var_dec);
+            return env
+    } 
 }
-
 
 export function eval_expr(expr: Expr, env: Env):number {
 
@@ -39,7 +48,7 @@ export function eval_expr(expr: Expr, env: Env):number {
             case "*":
                 return leftval * rightval;
             case "/":
-                return leftval * rightval;
+                return leftval / rightval;
             default:
                 throw `the operator sign ${expr.operator} is not supported`
 

@@ -4,12 +4,19 @@ exports.evaluate = evaluate;
 exports.eval_stmt = eval_stmt;
 exports.eval_expr = eval_expr;
 function evaluate(program, env) {
-    return eval_stmt(program, env);
+    var last_result = undefined;
+    for (var _i = 0, _a = program.body; _i < _a.length; _i++) {
+        var stat_1 = _a[_i];
+        last_result = eval_stmt(stat_1, env);
+    }
+    return last_result;
 }
 function eval_stmt(stmt, env) {
-    if (stmt.kind == "Variable-Declare") {
+    if (stmt.kind === "Variable-Declaration") {
         var var_dec = stmt;
-        return eval_expr(var_dec.value, env);
+        var value = eval_expr(var_dec, env);
+        env.define(var_dec.kind, var_dec);
+        return env;
     }
 }
 function eval_expr(expr, env) {
@@ -27,7 +34,7 @@ function eval_expr(expr, env) {
             case "*":
                 return leftval * rightval;
             case "/":
-                return leftval * rightval;
+                return leftval / rightval;
             default:
                 throw "the operator sign ".concat(expr.operator, " is not supported");
         }
