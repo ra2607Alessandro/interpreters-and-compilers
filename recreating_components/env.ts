@@ -50,7 +50,5 @@ export class Env {
     }
 }
 
-const env = new Env();
-env.update("a", 20);
-env.update("a", 87)
-console.log(env.lookup("a"))
+
+

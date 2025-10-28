@@ -1,10 +1,26 @@
 import { constants } from "buffer";
+import { Env } from "./env";
+import { Program, Statement, VariableDeclare } from "./new_parser";
 
-type Expr = 
+
+export type Expr = 
            | {kind: "Number", value: number} 
            | {kind: "BinaryOp", left: Expr, operator: string, right: Expr}
 
-function evaluate(expr: Expr):number {
+
+
+export function evaluate(program: Program, env: Env): any {
+    return eval_stmt(program, env)
+}
+
+export function eval_stmt(stmt: Statement, env: Env):any {
+    if (stmt.kind=="Variable-Declare")
+        {   const var_dec = stmt as VariableDeclare
+            return eval_expr(var_dec.value, env)} 
+}
+
+
+export function eval_expr(expr: Expr, env: Env):number {
 
     if ( expr.kind === "Number"){
         return expr.value
@@ -12,8 +28,8 @@ function evaluate(expr: Expr):number {
 
     if (expr.kind === "BinaryOp" )
         {
-        const leftval = evaluate(expr.left);
-        const rightval = evaluate(expr.right); 
+        const leftval = eval_expr(expr.left, env);
+        const rightval = eval_expr(expr.right, env); 
         
         switch(expr.operator){
             case "+":
@@ -39,11 +55,3 @@ function evaluate(expr: Expr):number {
 
 
 
-const Test : Expr = {
-    kind: "BinaryOp",
-    left: {kind: "BinaryOp", left: {kind: "Number", value: 5}, operator: "+", right: {kind: "Number", value: 3}},
-    operator: "*",
-    right: {kind: "Number", value: 2}
-
-}
-console.log(evaluate(Test))

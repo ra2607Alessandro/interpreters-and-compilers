@@ -1,16 +1,16 @@
 import { lexer, Token, AllTokens } from "./new_lexer";
 
-interface Program {
+export interface Program {
     kind: "Program",
     body: Statement[]
 }
 
-interface Statement {
+export interface Statement {
     kind: string
 
 }
 
-interface Expr {
+export interface Expr {
     kind: string
 }
 
@@ -27,7 +27,7 @@ interface BinaryExpr extends Expr {
 }
 
 
-interface VariableDeclare extends Statement {
+export interface VariableDeclare extends Statement {
     kind: "Variable-Declaration",
     ident: string,
     value: Expr,
@@ -117,7 +117,3 @@ export class Parsing {
     }
 }
 
-const parser = new Parsing();
-const string = "let continents = 45 + 3"
-const nor = parser.ProduceAST(string)  // ✅ Passes the string directly
-console.log(JSON.stringify(nor, null, 2))  // ✅ Stringifies the RESULT
