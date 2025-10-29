@@ -41,28 +41,55 @@ var Parsing = /** @class */ (function () {
         if (current.token == new_lexer_1.AllTokens.LET || current.token == new_lexer_1.AllTokens.CONST) {
             return this.parse_var_declaration();
         }
+        console.log(current);
         throw new Error("bro, what the fuck? Whenever you start a statement you need to declare a variable with const or let");
     };
-    Parsing.prototype.parse_value = function () {
-        var val = this.expect(new_lexer_1.AllTokens.Number, "The expression has to start with a number");
-        var next = this.eat();
-        if (next.token == new_lexer_1.AllTokens.BinaryOp && this.not_complete()) {
-            var second = this.expect(new_lexer_1.AllTokens.Number, "Expression can only take in a number");
-            return { kind: "BinaryExpression",
-                left: { kind: "Number", value: parseFloat(val.value) },
-                operator: next.value,
-                right: { kind: "Number", value: parseFloat(second.value) } };
+    Parsing.prototype.parse_addittive_expr = function () {
+        var left = this.parse_multiplicative_expr();
+        while (this.at() && (this.at().value === "+" || this.at().value === "-")) {
+            var operator = this.eat();
+            var num = this.parse_multiplicative_expr();
+            return {
+                kind: "BinaryExpression",
+                left: left,
+                operator: operator.value,
+                right: num
+            };
         }
-        else {
-            return { kind: "Number", value: parseFloat(val.value) };
+        return left;
+    };
+    Parsing.prototype.parse_multiplicative_expr = function () {
+        var left = this.parse_primary_expr();
+        while (this.at() && (this.at().value === "*" || this.at().value === "/")) {
+            var operator = this.eat();
+            var num = this.parse_primary_expr();
+            return {
+                kind: "BinaryExpression",
+                left: left,
+                operator: operator.value,
+                right: num
+            };
         }
+        return left;
+    };
+    Parsing.prototype.parse_primary_expr = function () {
+        var obj = this.at();
+        if (obj.token === new_lexer_1.AllTokens.Number) {
+            return { kind: "Number", value: parseFloat(obj.value) };
+        }
+        else if (obj.token === new_lexer_1.AllTokens.Open_Paren) {
+            var expr = this.parse_addittive_expr();
+            this.expect(new_lexer_1.AllTokens.Close_Paren, "Expected a close parenthesis after an open parenthesis");
+            return expr;
+        }
+        throw new Error("As in like bro, you need to fucking put something in that");
     };
     Parsing.prototype.parse_var_declaration = function () {
         var isCostant = this.at().token == new_lexer_1.AllTokens.CONST;
         this.eat();
         var ident = this.expect(new_lexer_1.AllTokens.Identifier, "Expected value after variable declaration is an Identifier, not: ".concat(this.at().token)).value;
         this.expect(new_lexer_1.AllTokens.Equal, "Expected token is ' = ' , not: ".concat(this.at().value, " "));
-        var value = this.parse_value();
+        var value = this.parse_addittive_expr();
         return {
             kind: "Variable-Declaration",
             isCostant: isCostant,

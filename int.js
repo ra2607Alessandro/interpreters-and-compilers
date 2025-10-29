@@ -5,7 +5,7 @@ var env_1 = require("./recreating_components/env");
 var new_parser_1 = require("./recreating_components/new_parser");
 var parser = new new_parser_1.Parsing();
 var env = new env_1.Env();
-var string = "let sum = 2 + 7";
+var string = "let sum = 2 + 7 + 3";
 var ast = parser.ProduceAST(string);
 console.log(JSON.stringify(ast, null, 2));
 var evaluation = (0, binop_1.evaluate)(ast, env);
