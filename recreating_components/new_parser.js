@@ -49,7 +49,7 @@ var Parsing = /** @class */ (function () {
         while (this.at() && (this.at().value === "+" || this.at().value === "-")) {
             var operator = this.eat();
             var num = this.parse_multiplicative_expr();
-            return {
+            left = {
                 kind: "BinaryExpression",
                 left: left,
                 operator: operator.value,
@@ -63,7 +63,7 @@ var Parsing = /** @class */ (function () {
         while (this.at() && (this.at().value === "*" || this.at().value === "/")) {
             var operator = this.eat();
             var num = this.parse_primary_expr();
-            return {
+            left = {
                 kind: "BinaryExpression",
                 left: left,
                 operator: operator.value,
@@ -75,9 +75,10 @@ var Parsing = /** @class */ (function () {
     Parsing.prototype.parse_primary_expr = function () {
         var obj = this.at();
         if (obj.token === new_lexer_1.AllTokens.Number) {
+            this.eat();
             return { kind: "Number", value: parseFloat(obj.value) };
         }
-        else if (obj.token === new_lexer_1.AllTokens.Open_Paren) {
+        if (obj.token === new_lexer_1.AllTokens.Open_Paren) {
             var expr = this.parse_addittive_expr();
             this.expect(new_lexer_1.AllTokens.Close_Paren, "Expected a close parenthesis after an open parenthesis");
             return expr;

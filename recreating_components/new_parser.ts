@@ -89,7 +89,7 @@ export class Parsing {
      while (this.at() && (this.at().value === "+" || this.at().value === "-")){
      const operator = this.eat();
      const num = this.parse_multiplicative_expr();
-     return {
+     left = {
         kind: "BinaryExpression", 
         left: left, 
         operator: operator.value,
@@ -104,7 +104,7 @@ export class Parsing {
     while (this.at() && (this.at().value === "*" || this.at().value === "/")){
      const operator = this.eat();
      const num = this.parse_primary_expr();
-     return {
+     left = {
         kind: "BinaryExpression", 
         left: left, 
         operator: operator.value,
@@ -115,11 +115,12 @@ export class Parsing {
   }
 
   private parse_primary_expr():Expr {
-   const obj = this.at()
+   let obj = this.at();
         if (obj.token === AllTokens.Number){
+            this.eat()
             return {kind: "Number", value: parseFloat(obj.value)} as NumericLiteral
         }
-        else if (obj.token === AllTokens.Open_Paren){
+        if (obj.token === AllTokens.Open_Paren){
           const expr = this.parse_addittive_expr();
           this.expect(AllTokens.Close_Paren, "Expected a close parenthesis after an open parenthesis")
           return expr
