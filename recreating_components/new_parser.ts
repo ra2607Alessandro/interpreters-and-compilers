@@ -120,7 +120,8 @@ export class Parsing {
             this.eat()
             return {kind: "Number", value: parseFloat(obj.value)} as NumericLiteral
         }
-        if (obj.token === AllTokens.Open_Paren){
+        else if (obj.token === AllTokens.Open_Paren){
+          this.eat()
           const expr = this.parse_addittive_expr();
           this.expect(AllTokens.Close_Paren, "Expected a close parenthesis after an open parenthesis")
           return expr

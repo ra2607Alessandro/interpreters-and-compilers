@@ -5,7 +5,7 @@ import { Parsing } from "./recreating_components/new_parser";
 const parser = new Parsing();
 const env = new Env();
 
-const string = "let sum = 2 + 3 + ( 9 + 5 )"
+const string = "let sum = 2 * ( 9 + 5 )"
 
 const ast = parser.ProduceAST(string)
 
