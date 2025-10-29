@@ -84,59 +84,55 @@ export class Parsing {
         throw new Error("bro, what the fuck? Whenever you start a statement you need to declare a variable with const or let")
   }
 
-  private parse_addittive_expr():Expr {
+  private parse_additive_expr(): Expr {
     let left = this.parse_multiplicative_expr();
-     while (this.at() && (this.at().value === "+" || this.at().value === "-")){
-     const operator = this.eat();
-     const num = this.parse_multiplicative_expr();
-     left = {
-        kind: "BinaryExpression", 
-        left: left, 
-        operator: operator.value,
-        right: num
-     } as BinaryExpr
-     }
+    while (this.at() && (this.at().value == "+" || this.at().value == "-")){
+        const operator = this.eat()
+        const right = this.parse_multiplicative_expr();
+        left = {
+            kind: "BinaryExpression",
+            left: left,
+            operator: operator.value,
+            right: right
+        } as BinaryExpr
+    }
     return left
   }
-  
-  private parse_multiplicative_expr():Expr {
-    let left = this.parse_primary_expr()
-    while (this.at() && (this.at().value === "*" || this.at().value === "/")){
-     const operator = this.eat();
-     const num = this.parse_primary_expr();
-     left = {
-        kind: "BinaryExpression", 
-        left: left, 
-        operator: operator.value,
-        right: num
-     } as BinaryExpr
-     }
+  private parse_multiplicative_expr(): Expr {
+     let left = this.parse_primary_expr();
+    while (this.at() && (this.at().value == "*" || this.at().value == "/")){
+        const operator = this.eat()
+        const right = this.parse_primary_expr();
+        left = {
+            kind: "BinaryExpression",
+            left: left,
+            operator: operator.value,
+            right: right
+        } as BinaryExpr
+    }
     return left
   }
-
-  private parse_primary_expr():Expr {
-   let obj = this.at();
-        if (obj.token === AllTokens.Number){
-            this.eat()
-            return {kind: "Number", value: parseFloat(obj.value)} as NumericLiteral
-        }
-        else if (obj.token === AllTokens.Open_Paren){
-          this.eat()
-          const expr = this.parse_addittive_expr();
-          this.expect(AllTokens.Close_Paren, "Expected a close parenthesis after an open parenthesis")
-          return expr
-        }
-
-    throw new Error ("As in like bro, you need to fucking put something in that")
+  private parse_primary_expr(): Expr {
+    let obj = this.at()
+    if (obj.token == AllTokens.Number){
+        this.eat()
+        return {kind: "Number", value: parseFloat(obj.value)} as NumericLiteral
+    }   
+    else if (obj.token == AllTokens.Open_Paren){
+        this.eat()
+        const expr = this.parse_additive_expr();
+        this.expect(AllTokens.Close_Paren, "Expected a closing parenthesis")
+        return expr
+    }
+    throw new Error ("Are you gonna put something in there?")
   }
-
 
     private parse_var_declaration(){
     const isCostant = this.at().token == AllTokens.CONST 
     this.eat()
     const ident = this.expect(AllTokens.Identifier, `Expected value after variable declaration is an Identifier, not: ${this.at().token}`).value; 
     this.expect(AllTokens.Equal, `Expected token is ' = ' , not: ${this.at().value} `);
-    const value = this.parse_addittive_expr();
+    const value = this.parse_additive_expr();
     return {
         kind: "Variable-Declaration",
         isCostant,
