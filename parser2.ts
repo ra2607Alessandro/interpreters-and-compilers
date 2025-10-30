@@ -164,10 +164,8 @@ export default class Parser {
 
   private parse_consequence(): Stat[] {
     let consequence : Stat[] = [];
-    while(this.not_eof() && this.eat()){
-      this.eat()
-      const stat = this.parse_stmt();
-      consequence.push(stat);
+    while(this.not_eof() && this.at()!.type !== TokenType.CloseBrace){
+       consequence.push(this.parse_stmt());
     }
     return consequence
   }
@@ -175,16 +173,13 @@ export default class Parser {
   private parse_if_stat(): IfStatement{
     this.eat();
     this.expect(TokenType.Openparen, "Condiotion has to be contained inside a parenthesis")
-    const expr = this.parse_expr()
-    if(expr.kind !== "BooleanLiteral"){
-      throw "condition is expcted to be a boolean value"
-    }
+    const expr = this.parse_expr();
     this.expect(TokenType.Closeparen, "You need to close the parenthesis bro.")
     this.expect(TokenType.OpenBrace, "Consequence has to contained inside curly brackets")
     const consequence = this.parse_consequence()
     this.expect(TokenType.CloseBrace, "You forgot to close the parenthesis")
-    const ELSE = this.eat().type
-    if (ELSE === TokenType.ELSE)
+    const ELSE =this.at()
+    if (ELSE!.type === TokenType.ELSE)
     { const else_stat = this.parse_else_stat()
       return {kind: "IfStatement",
        condition: expr,

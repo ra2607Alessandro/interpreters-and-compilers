@@ -4,6 +4,12 @@ export enum TokenType {
     Number, 
     Identifier, 
     Equals,
+    EqualsEquals,    // ==
+    NotEquals,       // !=
+    LessThan,        // 
+    GreaterThan,     // >
+    LessOrEqual,     // <=
+    GreaterOrEqual,
     Comma,
     Colon,
     Dot, 
@@ -90,6 +96,24 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == ":") {
         tokens.push(token(src.shift()!, TokenType.Colon));
+    }
+    else if (src[0] == "==") {
+       tokens.push(token(src.shift()!, TokenType.EqualsEquals))
+    }
+    else if (src[0] == "!=") {
+       tokens.push(token(src.shift()!, TokenType.NotEquals))
+    }
+    else if (src[0] == "<") {
+       tokens.push(token(src.shift()!, TokenType.LessThan))
+    }
+    else if (src[0] == ">") {
+       tokens.push(token(src.shift()!, TokenType.GreaterThan))
+    }
+    else if (src[0] == "<=") {
+       tokens.push(token(src.shift()!, TokenType.LessOrEqual))
+    }
+    else if (src[0] == "=>") {
+       tokens.push(token(src.shift()!, TokenType.GreaterOrEqual))
     }
     else if (src[0] == ".") {
        tokens.push(token(src.shift()!, TokenType.Dot))

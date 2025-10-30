@@ -122,21 +122,32 @@ function eval_declare_fn(fn: FunctionDeclare, env: Environment): RuntimeVal {
 }
 
 function evaluate_consequence(stmts: Stat[], env: Environment): RuntimeVal{
-        
+        const scope = new Environment(env);
+        let lastResult : RuntimeVal = MK_NULL();
+
+        for (const stmt of stmts){
+            lastResult = evaluate(stmt, scope)
+        }
+        return lastResult
 }
 
 function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
     const cond = evaluate(stmt.condition, env)
-    if (cond.type == "boolean"){
-        const conseq = evaluate_consequence(stmt.consequence, env)
-        return conseq
+    if (cond.type !== "boolean"){
+        throw new Error ("The condition of an if statement must be of boolean type")
     }
-    if (stmt.consequence) {
+
+    const condintion = (cond as BooleanVal).value
+    if (condintion === true) {
         const alternative = evaluate_consequence(stmt.consequence, env)
         return alternative
     }
     
-    throw new Error ("statement error.")
+    if (stmt.else) {
+        return evaluate_consequence(stmt.else.stmt, env)
+    }
+
+    return MK_NULL()
 }
 
 
