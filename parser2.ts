@@ -16,6 +16,7 @@ import {
   CallExpr,
   Member,
   FunctionDeclare,
+  IfStatement,
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
@@ -147,6 +148,10 @@ export default class Parser {
         return this.parse_declaration();
       case TokenType.Function:
         return this.parse_fn_declaration();
+      case TokenType.IF:
+        return this.parse_if_stat()
+      case TokenType.ELSE:
+        return this.parse_else_stat()
       default: 
         return {
           kind: "ExpressionStatement",
@@ -156,7 +161,20 @@ export default class Parser {
 
 
   }
+  private parse_if_stat(): IfStatement{
+    this.eat();
+    this.expect(TokenType.Openparen, "Condiotion has to be contained inside a parenthesis")
+    const expr = this.at()
+   if( )
+    {throw "the condition of the if statment has to be a boolean"}
+    this.expect(TokenType.Closeparen, "You need to close the parenthesis bro.")
+    return {} as IfStatement
 
+  }
+
+  private parse_else_stat():Stat[] {
+
+  }
 
   public parse_object(): Expr {
     if (this.at()!.type !== TokenType.OpenBrace) {
@@ -185,7 +203,7 @@ export default class Parser {
             continue;
         }
 
-        // Regular property with value
+        // Regular property with value[]
         this.expect(TokenType.Colon, "Expected colon after property key");
         const value = this.parse_expr();
         properties.push({ kind: "Property", key, value });

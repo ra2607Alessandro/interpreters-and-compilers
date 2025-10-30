@@ -6,7 +6,9 @@ export enum TokenType {
     Equals,
     Comma,
     Colon,
-    Dot,
+    Dot, 
+    IF,
+    ELSE,
     Function,
     Openparen, 
     Closeparen, 
@@ -32,7 +34,9 @@ const KEYWORDS : Record<string, TokenType> = {
     "null" : TokenType.Null,
     "true" : TokenType.Boolean,
     "false" : TokenType.Boolean,
-    "fn": TokenType.Function
+    "fn": TokenType.Function,
+    "if": TokenType.IF,
+    "else": TokenType.ELSE
 }
 
 export function token(value: string, type: TokenType):Token {
@@ -92,6 +96,12 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == "fn") {
        tokens.push(token(src.shift()!, TokenType.Function)) 
+    }
+    else if (src[0] == "if") {
+        tokens.push(token(src.shift()!, TokenType.IF))
+    }
+    else if (src[0] == "else") {
+        tokens.push(token(src.shift()!, TokenType.ELSE))
     }
     else if (src[0] == "true" || src[0] == "false"){
         tokens.push(token(src.shift()!, TokenType.Boolean))

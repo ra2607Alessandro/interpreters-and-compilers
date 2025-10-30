@@ -1,6 +1,6 @@
-import { evaluate } from "./recreating_components/binop";
-import { Env } from "./recreating_components/env";
-import { Parsing } from "./recreating_components/new_parser";
+import { evaluate } from "./binop";
+import { Env } from "./env";
+import { Parsing } from "./new_parser";
 
 const parser = new Parsing();
 const env = new Env();
