@@ -17,6 +17,7 @@ import {
   Member,
   FunctionDeclare,
   IfStatement,
+  ElseStamement
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
@@ -198,7 +199,7 @@ export default class Parser {
       }
   }
 
-  private parse_else_stat():Stat[] {
+  private parse_else_stat():ElseStamement {
     this.eat();
     this.expect(TokenType.OpenBrace, "Open Brace Expected")
     let stmts : Stat[] = [];
@@ -207,7 +208,7 @@ export default class Parser {
       const stat = this.parse_stmt();
       stmts.push(stat);
     }
-    return stmts
+    return {kind: "ElseStamement", stmt: stmts} as ElseStamement
 
   }
 
