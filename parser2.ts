@@ -198,7 +198,7 @@ export default class Parser {
     this.eat();
     this.expect(TokenType.OpenBrace, "Open Brace Expected")
     let stmts : Stat[] = [];
-    while(this.not_eof() && this.at()!.type == TokenType.CloseBrace){
+    while(this.not_eof() && this.at()!.type !== TokenType.CloseBrace){
       
       stmts.push(this.parse_stmt());
       
