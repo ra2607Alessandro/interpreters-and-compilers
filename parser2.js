@@ -148,10 +148,9 @@ var Parser = /** @class */ (function () {
         this.expect(lexer_1.TokenType.OpenBrace, "Open Brace Expected");
         var stmts = [];
         while (this.not_eof() && this.at().type == lexer_1.TokenType.CloseBrace) {
-            var stat = this.parse_stmt();
-            stmts.push(stat);
-            this.expect(lexer_1.TokenType.CloseBrace, "Expects a closed brace");
+            stmts.push(this.parse_stmt());
         }
+        this.expect(lexer_1.TokenType.CloseBrace, "Expects a closed brace");
         return { kind: "ElseStamement", stmt: stmts };
     };
     Parser.prototype.parse_object = function () {
