@@ -38,26 +38,27 @@ function eval_numeric_binary_expr(lhs: NumValue, rhs: NumValue, operator: string
 }
      
 function eval_comparison_sign(lhs: NumValue, rhs: NumValue, operator: string): BooleanVal {
-    let results = false
-    if (operator == "=="){
-        results = lhs == rhs
-    }
-    else if(operator == "<"){
-        results = lhs < rhs
-    }
-    else if(operator == ">"){
-        results = lhs > rhs
-    }
-    else if(operator == "=>"){
-        results = lhs >= rhs
-    }
-    else if(operator == "<="){
-        results = lhs <= rhs
-    }
-    else if(operator == "!="){
-       results = lhs != rhs
-    }
-    return MK_BOOL(results)
+   let end = false;
+   if(operator == "=="){
+    end = lhs == rhs
+   }
+   else if(operator == "!="){
+    end = lhs != rhs
+   }
+   else if (operator == "=>"){
+    end = lhs >= rhs
+   }
+   else if(operator == "<="){
+    end = lhs <= rhs
+   }
+   else if(operator == "<"){
+    end = lhs < rhs
+   }
+   else if(operator == ">"){
+    end = lhs > rhs
+   }
+
+   return MK_BOOL(end)
 }
 
 function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {

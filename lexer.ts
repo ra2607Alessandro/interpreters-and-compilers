@@ -7,10 +7,10 @@ export enum TokenType {
     Equals,
     EqualsEquals,    // ==
     NotEquals,       // !=
-    LessThan,        // 
+    LessThan,        // <
     GreaterThan,     // >
     LessOrEqual,     // <=
-    GreaterOrEqual,
+    GreaterOrEqual,  // => 
     Comma,
     Colon,
     Dot, 
