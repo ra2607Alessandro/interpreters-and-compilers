@@ -37,11 +37,37 @@ function eval_numeric_binary_expr(lhs: NumValue, rhs: NumValue, operator: string
     return {value: result, type: "number"}
 }
      
+function eval_comparison_sign(lhs: NumValue, rhs: NumValue, operator: string): BooleanVal {
+    let results = false
+    if (operator == "=="){
+        results = lhs == rhs
+    }
+    else if(operator == "<"){
+        results = lhs < rhs
+    }
+    else if(operator == ">"){
+        results = lhs > rhs
+    }
+    else if(operator == "=>"){
+        results = lhs >= rhs
+    }
+    else if(operator == "<="){
+        results = lhs <= rhs
+    }
+    else if(operator == "!="){
+       results = lhs != rhs
+    }
+    return MK_BOOL(results)
+}
+
 function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {
     const lhs = evaluate(binop.left, env);
     const rhs = evaluate(binop.right, env);
 
     if (lhs.type == "number" && rhs.type == "number") {
+        if (binop.operator == "==" || binop.operator == "<"|| binop.operator == ">"||binop.operator == "=>"||binop.operator == "<="||binop.operator == "!="){
+            return eval_comparison_sign(lhs as NumValue, rhs as NumValue, binop.operator)
+        }
         return eval_numeric_binary_expr(lhs as NumValue,  rhs as NumValue, binop.operator)
     }
 
