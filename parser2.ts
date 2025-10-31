@@ -203,6 +203,7 @@ export default class Parser {
       const stat = this.parse_stmt();
       stmts.push(stat);
     }
+    this.expect(TokenType.CloseBrace, "Close the parenthesis idiot")
     return {kind: "ElseStamement", stmt: stmts} as ElseStamement
 
   }

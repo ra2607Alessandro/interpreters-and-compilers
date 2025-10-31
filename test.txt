@@ -1,0 +1,8 @@
+let condition = true
+
+if(condition){
+    print("true branch")
+}
+else { 
+    print("false branch")
+}
