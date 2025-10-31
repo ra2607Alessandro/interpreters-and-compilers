@@ -2,7 +2,7 @@ import { Token, TokenType } from "./lexer";
 import { FunctionCall } from "./value";
 
 
-export type NodeType = "ElseStamement" |"IfStatement" | "ExpressionStatement" | "Program" | "NumericLiteral" | "NullLiteral" | "BooleanLiteral" | "Identifier" | "FunctionDeclare" |"BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
+export type NodeType = "StringLiteral" |"ElseStamement" |"IfStatement" | "ExpressionStatement" | "Program" | "NumericLiteral" | "NullLiteral" | "BooleanLiteral" | "Identifier" | "FunctionDeclare" |"BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
 
 export interface Stat {
     kind: NodeType
@@ -62,6 +62,11 @@ export interface VariableDeclare extends Stat {
 export interface Identifier extends Expr {
     kind: "Identifier"
     symbol: string
+}
+
+export interface StringLiteral extends Expr {
+    kind: "StringLiteral",
+    value: string
 }
 
 export interface NumericLiteral extends Expr {

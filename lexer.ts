@@ -2,7 +2,8 @@
 export enum TokenType {
     Null,
     Number, 
-    Identifier, 
+    Identifier,
+    String, 
     Equals,
     EqualsEquals,    // ==
     NotEquals,       // !=
@@ -135,6 +136,18 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == "=") {
         tokens.push(token(src.shift()!, TokenType.Equals))
+    }
+    else if(src[0] == "'" || src[0] == '"'){
+        const quoteType = src.shift()!;
+        let str= " "
+        while (src.length > 0 && src[0] !== quoteType){
+            str += src.shift()!
+        }
+        if (src.length > 0){
+            src.shift()!
+        }
+        tokens.push(token(str, TokenType.String))
+
     }
     else if (isInt(src[0]!)) {
             let num = "";

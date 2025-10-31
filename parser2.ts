@@ -17,7 +17,8 @@ import {
   Member,
   FunctionDeclare,
   IfStatement,
-  ElseStamement
+  ElseStamement,
+  StringLiteral
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
@@ -413,6 +414,13 @@ export default class Parser {
           value: parseFloat(this.eat().value!),
         } as NumericLiteral;
 
+      // Strings
+      case TokenType.String:
+        return {
+          kind: "StringLiteral", 
+          value: this.eat()!.value
+        } as StringLiteral
+        
       // Grouping Expressions
       case TokenType.Openparen: {
         this.eat(); // eat the opening paren

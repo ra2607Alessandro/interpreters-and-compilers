@@ -1,5 +1,5 @@
 import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction } from "./value";
-import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, ExpressionStatement, FunctionDeclare, Identifier, IfStatement, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, VariableDeclare } from "./ast";
+import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, ExpressionStatement, FunctionDeclare, Identifier, IfStatement, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, StringLiteral, VariableDeclare } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
 import { constants } from "buffer";
@@ -206,6 +206,8 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
             return MK_BOOL((astNode as BooleanLiteral).value);
         case "IfStatement":
             return eval_if_stmt(astNode as IfStatement, env);
+        case "StringLiteral":
+            return {type: "string", value: (astNode as StringLiteral).value} as RuntimeVal
             default:
             throw new Error(`This AST Node has not yet been setup for interpretation, ${astNode}`)
 
