@@ -16,6 +16,7 @@ export enum TokenType {
     Dot, 
     IF,
     ELSE,
+    WHILE,
     Function,
     Openparen, 
     Closeparen, 
@@ -43,7 +44,8 @@ const KEYWORDS : Record<string, TokenType> = {
     "false" : TokenType.Boolean,
     "fn": TokenType.Function,
     "if": TokenType.IF,
-    "else": TokenType.ELSE
+    "else": TokenType.ELSE,
+    "while": TokenType.WHILE
 }
 
 export function token(value: string, type: TokenType):Token {
@@ -127,6 +129,9 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == "else") {
         tokens.push(token(src.shift()!, TokenType.ELSE))
+    }
+    else if (src[0] == "while") {
+        tokens.push(token(src.shift()!, TokenType.WHILE))
     }
     else if (src[0] == "true" || src[0] == "false"){
         tokens.push(token(src.shift()!, TokenType.Boolean))
