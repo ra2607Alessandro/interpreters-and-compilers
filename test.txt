@@ -1,8 +1,8 @@
-let condition = true
+let x = 0
+while (x < 3) {
+    print(x)
+    x = x + 1
+}
+print("done")
 
-if(condition){
-    print("true branch")
-}
-else { 
-    print("false branch")
-}
+
