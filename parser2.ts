@@ -182,14 +182,20 @@ export default class Parser {
   private parse_for_loop(): ForLoop {
     this.eat();
     this.expect(TokenType.Openparen, "'(' is expected")
+    let init : VariableDeclare | Expr 
     if (this.at()!.type == TokenType.Let || this.at()!.type == TokenType.Const){
-    const init = this.parse_declaration()}
-    const init = this.parse_expr();
-    const condition = this.parse_expr()
+    init = this.parse_declaration()}
+    else {
+    init = this.parse_expr();}
+    this.expect(TokenType.Comma, "',' is expected")
+    const condition = this.parse_expr();
+    this.expect(TokenType.Closeparen, "',' is expected");
+    const increment = this.parse_expr()
     this.expect(TokenType.Closeparen, "')' is expected");
     this.expect(TokenType.OpenBrace, "'{' is expected");
-    return {init: init, condition: condition } as ForLoop
-   
+    const body = this.parse_consequence();
+    this.expect(TokenType.CloseBrace, "'}' is expected")
+    return {init: init, condition: condition, increment: increment, body: body } as ForLoop
   }
   
 

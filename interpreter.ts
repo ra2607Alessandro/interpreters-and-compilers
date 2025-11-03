@@ -1,5 +1,5 @@
 import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction } from "./value";
-import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, ExpressionStatement, FunctionDeclare, Identifier, IfStatement, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, StringLiteral, VariableDeclare, WhileStatement } from "./ast";
+import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, Expr, ExpressionStatement, ForLoop, FunctionDeclare, Identifier, IfStatement, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, StringLiteral, VariableDeclare, WhileStatement } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
 import { constants } from "buffer";
@@ -177,19 +177,49 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
     return MK_NULL()
 }
 
-function eval_while_stmt(stmt: WhileStatement, env: Environment): RuntimeVal{
-    const cond = (evaluate(stmt.condition, env) as BooleanVal).value
-    while (cond === true){
-        const body = evaluate_consequence(stmt.body, env)
-        return body
-    }
-
-    if (cond === false){
-        throw "Not possible to iterate on a false condition"
-    }
-    throw new Error ("A While statement needs a Boolean value in the condition")
+function eval_for_loop(loop: ForLoop, env: Environment): RuntimeVal {
+     const loop_env = new Environment(env);
+     let init = loop.init
+    if ( init.kind == "VariableDeclare" ){
+          eval_declar_var(init as VariableDeclare, loop_env)
+        }
+        else {
+            evaluate(init, loop_env)
+        }
+     while (true){
+        const cond = evaluate(loop.condition, loop_env);
+        if (cond.type !== "boolean"){
+            throw "condition has to be of type boolean"
+        }
+        const condval = (evaluate(loop.condition, loop_env) as BooleanVal).value
+        if (condval == true){
+            const body_scope = new Environment(loop_env);
+            evaluate_consequence(loop.body, body_scope)
+            evaluate(loop.increment, loop_env)
+        }
+        else {
+            return MK_NULL()
+        }
+        
+     }
 }
 
+function eval_while_stmt(stmt: WhileStatement, env: Environment): RuntimeVal{
+    while( true){
+    const cond = evaluate(stmt.condition, env)
+    if (cond.type !== "boolean"){
+       throw "condition has to be of type boolean"
+    }
+
+    const condval = (evaluate(stmt.condition, env) as BooleanVal).value
+
+    if (condval === false){
+        break 
+    }
+    evaluate_consequence(stmt.body, env)
+}
+    return MK_NULL()
+}
 
 export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
     switch(astNode.kind) {
@@ -221,6 +251,8 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
             return eval_if_stmt(astNode as IfStatement, env);
         case "WhileStatement":
             return eval_while_stmt(astNode as WhileStatement, env)
+        case "ForLoop":
+            return eval_for_loop(astNode as ForLoop, env)
         case "StringLiteral":
             return {type: "string", value: (astNode as StringLiteral).value} as RuntimeVal
             default:
