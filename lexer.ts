@@ -14,6 +14,7 @@ export enum TokenType {
     Comma,
     Colon,
     Dot, 
+    FOR,
     IF,
     ELSE,
     WHILE,
@@ -44,6 +45,7 @@ const KEYWORDS : Record<string, TokenType> = {
     "false" : TokenType.Boolean,
     "fn": TokenType.Function,
     "if": TokenType.IF,
+    "for": TokenType.FOR,
     "else": TokenType.ELSE,
     "while": TokenType.WHILE
 }
@@ -123,6 +125,9 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == "fn") {
        tokens.push(token(src.shift()!, TokenType.Function)) 
+    }
+    else if (src[0] == "for") {
+        tokens.push(token(src.shift()!, TokenType.FOR))
     }
     else if (src[0] == "if") {
         tokens.push(token(src.shift()!, TokenType.IF))

@@ -2,7 +2,7 @@ import { Token, TokenType } from "./lexer";
 import { FunctionCall } from "./value";
 
 
-export type NodeType = "WhileStatement" |"StringLiteral" |"ElseStamement" |"IfStatement" | "ExpressionStatement" | "Program" | "NumericLiteral" | "NullLiteral" | "BooleanLiteral" | "Identifier" | "FunctionDeclare" |"BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
+export type NodeType = "ForLoop"|"WhileStatement" |"StringLiteral" |"ElseStamement" |"IfStatement" | "ExpressionStatement" | "Program" | "NumericLiteral" | "NullLiteral" | "BooleanLiteral" | "Identifier" | "FunctionDeclare" |"BinaryExpr" | "VariableDeclare" | "Assignment Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
 
 export interface Stat {
     kind: NodeType
@@ -24,6 +24,14 @@ export interface IfStatement {
     consequence: Stat[],
     else?: ElseStamement
 
+}
+
+export interface ForLoop {
+    kind: "ForLoop",
+    init: VariableDeclare | Expr,
+    condition: BooleanLiteral,
+    increment: Expr,
+    body: Stat[]
 }
 export interface WhileStatement {
     kind: "WhileStatement",

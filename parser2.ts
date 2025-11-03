@@ -19,7 +19,8 @@ import {
   IfStatement,
   ElseStamement,
   StringLiteral,
-  WhileStatement
+  WhileStatement,
+  ForLoop
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
@@ -151,6 +152,8 @@ export default class Parser {
         return this.parse_declaration();
       case TokenType.Function:
         return this.parse_fn_declaration();
+      case TokenType.FOR:
+        return this.parse_for_loop()
       case TokenType.IF:
         return this.parse_if_stat()
       case TokenType.ELSE:
@@ -174,6 +177,19 @@ export default class Parser {
     const body = this.parse_consequence();
     this.expect(TokenType.CloseBrace, "'}' is expected")
     return {kind: "WhileStatement", condition: cond, body: body} as WhileStatement
+  }
+
+  private parse_for_loop(): ForLoop {
+    this.eat();
+    this.expect(TokenType.Openparen, "'(' is expected")
+    if (this.at()!.type == TokenType.Let || this.at()!.type == TokenType.Const){
+    const init = this.parse_declaration()}
+    const init = this.parse_expr();
+    const condition = this.parse_expr()
+    this.expect(TokenType.Closeparen, "')' is expected");
+    this.expect(TokenType.OpenBrace, "'{' is expected");
+    return {init: init, condition: condition } as ForLoop
+   
   }
   
 
