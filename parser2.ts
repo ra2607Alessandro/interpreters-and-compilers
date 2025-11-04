@@ -187,14 +187,14 @@ export default class Parser {
     init = this.parse_declaration()}
     else {
     init = this.parse_expr();}
-    this.expect(TokenType.Comma, "',' is expected")
+    this.expect(TokenType.Comma, " ',' is expected")
     const condition = this.parse_expr();
-    this.expect(TokenType.Closeparen, "',' is expected");
-    const increment = this.parse_expr()
+    this.expect(TokenType.Comma, " ',' is expected");
+    const increment = this.parse_expr();
     this.expect(TokenType.Closeparen, "')' is expected");
-    this.expect(TokenType.OpenBrace, "'{' is expected");
+    this.expect(TokenType.OpenBrace, " '{' is expected");
     const body = this.parse_consequence();
-    this.expect(TokenType.CloseBrace, "'}' is expected")
+    this.expect(TokenType.CloseBrace, " '}' is expected")
     return {init: init, condition: condition, increment: increment, body: body } as ForLoop
   }
   

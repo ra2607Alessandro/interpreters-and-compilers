@@ -139,7 +139,7 @@ var Parser = /** @class */ (function () {
         }
         this.expect(lexer_1.TokenType.Comma, "',' is expected");
         var condition = this.parse_expr();
-        this.expect(lexer_1.TokenType.Closeparen, "',' is expected");
+        this.expect(lexer_1.TokenType.Comma, "',' is expected");
         var increment = this.parse_expr();
         this.expect(lexer_1.TokenType.Closeparen, "')' is expected");
         this.expect(lexer_1.TokenType.OpenBrace, "'{' is expected");
