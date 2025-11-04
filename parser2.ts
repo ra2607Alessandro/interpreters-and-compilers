@@ -290,22 +290,32 @@ export default class Parser {
     const first = this.parse_object()
 
     if (
-    this.at()!.type == TokenType.Equals || 
-    this.at()!.type == TokenType.EqualsEquals ||
-    this.at()!.type == TokenType.GreaterOrEqual ||  
-    this.at()!.type == TokenType.NotEquals ||
-    this.at()!.type == TokenType.LessThan || 
-    this.at()!.type == TokenType.GreaterThan ) {
+    this.at()!.type == TokenType.Equals) {
     this.eat()
     const value = this.parse_assignment_expr()
     return {kind: "Assignment Expr", assigne: first, value: value} as AssignmentExpr
     }
-    
+
     return first
   }
 
   // Handle expressions
- 
+ private parse_comparison_sign(): Expr {
+  const first = this.parse_object()
+
+  if (
+    this.at()!.type == TokenType.EqualsEquals ||
+    this.at()!.type == TokenType.GreaterOrEqual ||  
+    this.at()!.type == TokenType.NotEquals ||
+    this.at()!.type == TokenType.LessThan || 
+    this.at()!.type == TokenType.GreaterThan 
+  ) 
+  { const op = this.eat()
+    const val = this.parse_object()
+    return {kind: "BinaryExpr", left: first, right: val, operator: op.value } as BinaryExpr
+  }
+  return first
+ }
        
 
 

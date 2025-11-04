@@ -46,6 +46,7 @@ export interface ElseStamement {
 export interface Expr extends Stat {}
 
 export interface BinaryExpr extends Stat {
+    kind: "BinaryExpr",
     left: Expr,
     right: Expr,
     operator: string
