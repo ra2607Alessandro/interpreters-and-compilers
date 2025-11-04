@@ -296,6 +296,7 @@ export default class Parser {
     return {kind: "Assignment Expr", assigne: first, value: value} as AssignmentExpr
     }
 
+
     return first
   }
 
@@ -484,7 +485,36 @@ export default class Parser {
         ); // closing paren
         return value;
       }
-      
+      case TokenType.EqualsEquals: {
+        this.eat();
+        const val = this.parse_comparison_sign()
+        return val
+      }
+      case TokenType.NotEquals: {
+        this.eat();
+        const val = this.parse_comparison_sign()
+        return val
+      }
+      case TokenType.GreaterOrEqual: {
+        this.eat();
+        const val = this.parse_comparison_sign()
+        return val
+      }
+      case TokenType.LessOrEqual: {
+        this.eat();
+        const val = this.parse_comparison_sign()
+        return val
+      }
+      case TokenType.GreaterThan: {
+        this.eat();
+        const val = this.parse_comparison_sign()
+        return val
+      }
+      case TokenType.LessThan: {
+        this.eat();
+        const val = this.parse_comparison_sign()
+        return val
+      }
       // Unidentified Tokens and Invalid Code Reached
       default:
         console.log(this.at())
