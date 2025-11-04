@@ -35,22 +35,22 @@ function eval_numeric_binary_expr(lhs, rhs, operator) {
 function eval_comparison_sign(lhs, rhs, operator) {
     var end = false;
     if (operator == "==") {
-        end = lhs == rhs;
+        end = lhs.value == rhs.value;
     }
     else if (operator == "!=") {
-        end = lhs != rhs;
+        end = lhs.value != rhs.value;
     }
     else if (operator == "=>") {
-        end = lhs >= rhs;
+        end = lhs.value >= rhs.value;
     }
     else if (operator == "<=") {
-        end = lhs <= rhs;
+        end = lhs.value <= rhs.value;
     }
     else if (operator == "<") {
-        end = lhs < rhs;
+        end = lhs.value < rhs.value;
     }
     else if (operator == ">") {
-        end = lhs > rhs;
+        end = lhs.value > rhs.value;
     }
     return (0, value_1.MK_BOOL)(end);
 }

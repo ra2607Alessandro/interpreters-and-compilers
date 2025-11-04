@@ -40,22 +40,22 @@ function eval_numeric_binary_expr(lhs: NumValue, rhs: NumValue, operator: string
 function eval_comparison_sign(lhs: NumValue, rhs: NumValue, operator: string): BooleanVal {
    let end = false;
    if(operator == "=="){
-    end = lhs == rhs
+    end = lhs.value == rhs.value
    }
    else if(operator == "!="){
-    end = lhs != rhs
+    end = lhs.value != rhs.value
    }
    else if (operator == "=>"){
-    end = lhs >= rhs
+    end = lhs.value >= rhs.value
    }
    else if(operator == "<="){
-    end = lhs <= rhs
+    end = lhs.value <= rhs.value
    }
    else if(operator == "<"){
-    end = lhs < rhs
+    end = lhs.value < rhs.value
    }
    else if(operator == ">"){
-    end = lhs > rhs
+    end = lhs.value > rhs.value
    }
 
    return MK_BOOL(end)
