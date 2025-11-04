@@ -210,14 +210,11 @@ function eval_while_stmt(stmt: WhileStatement, env: Environment): RuntimeVal{
     if (cond.type !== "boolean"){
        throw "condition has to be of type boolean"
     }
-
     const condval = (evaluate(stmt.condition, env) as BooleanVal).value
-
     if (condval === false){
         break 
     }
-    evaluate_consequence(stmt.body, env)
-}
+    evaluate_consequence(stmt.body, env)}
     return MK_NULL()
 }
 

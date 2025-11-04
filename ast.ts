@@ -29,7 +29,7 @@ export interface IfStatement {
 export interface ForLoop {
     kind: "ForLoop",
     init: VariableDeclare | Expr,
-    condition: BooleanLiteral,
+    condition: Expr,
     increment: Expr,
     body: Stat[]
 }

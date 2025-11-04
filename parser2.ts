@@ -296,10 +296,11 @@ export default class Parser {
     this.at()!.type == TokenType.NotEquals ||
     this.at()!.type == TokenType.LessThan || 
     this.at()!.type == TokenType.GreaterThan ) {
-     this.eat()
-     const value = this.parse_assignment_expr()
-     return {kind: "Assignment Expr", assigne: first, value: value} as AssignmentExpr
+    this.eat()
+    const value = this.parse_assignment_expr()
+    return {kind: "Assignment Expr", assigne: first, value: value} as AssignmentExpr
     }
+    
     return first
   }
 

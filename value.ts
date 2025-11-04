@@ -17,7 +17,7 @@ export interface NullValue extends RuntimeVal {
 
 export interface BooleanVal extends RuntimeVal {
     type: "boolean"
-    value: true | false
+    value: boolean
 }
 
 export interface NumValue extends RuntimeVal {
