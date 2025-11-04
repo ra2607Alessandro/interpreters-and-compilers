@@ -195,7 +195,7 @@ export default class Parser {
     this.expect(TokenType.OpenBrace, " '{' is expected");
     const body = this.parse_consequence();
     this.expect(TokenType.CloseBrace, " '}' is expected")
-    return {init: init, condition: condition, increment: increment, body: body } as ForLoop
+    return {kind: "ForLoop" ,init: init, condition: condition, increment: increment, body: body } as ForLoop
   }
   
 

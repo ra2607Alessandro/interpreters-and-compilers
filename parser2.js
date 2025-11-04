@@ -137,15 +137,15 @@ var Parser = /** @class */ (function () {
         else {
             init = this.parse_expr();
         }
-        this.expect(lexer_1.TokenType.Comma, "',' is expected");
+        this.expect(lexer_1.TokenType.Comma, " ',' is expected");
         var condition = this.parse_expr();
-        this.expect(lexer_1.TokenType.Comma, "',' is expected");
+        this.expect(lexer_1.TokenType.Comma, " ',' is expected");
         var increment = this.parse_expr();
         this.expect(lexer_1.TokenType.Closeparen, "')' is expected");
-        this.expect(lexer_1.TokenType.OpenBrace, "'{' is expected");
+        this.expect(lexer_1.TokenType.OpenBrace, " '{' is expected");
         var body = this.parse_consequence();
-        this.expect(lexer_1.TokenType.CloseBrace, "'}' is expected");
-        return { init: init, condition: condition, increment: increment, body: body };
+        this.expect(lexer_1.TokenType.CloseBrace, " '}' is expected");
+        return { kind: "ForLoop", init: init, condition: condition, increment: increment, body: body };
     };
     Parser.prototype.parse_consequence = function () {
         var consequence = [];
