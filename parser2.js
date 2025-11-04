@@ -218,7 +218,7 @@ var Parser = /** @class */ (function () {
         return { kind: "ObjectLiteral", properties: properties };
     };
     Parser.prototype.parse_assignment_expr = function () {
-        var first = this.parse_object();
+        var first = this.parse_comparison_sign();
         if (this.at().type == lexer_1.TokenType.Equals) {
             this.eat();
             var value = this.parse_assignment_expr();
@@ -365,36 +365,6 @@ var Parser = /** @class */ (function () {
                 var value = this.parse_expr();
                 this.expect(lexer_1.TokenType.Closeparen, "Unexpected token found inside parenthesised expression. Expected closing parenthesis."); // closing paren
                 return value;
-            }
-            case lexer_1.TokenType.EqualsEquals: {
-                this.eat();
-                var val = this.parse_comparison_sign();
-                return val;
-            }
-            case lexer_1.TokenType.NotEquals: {
-                this.eat();
-                var val = this.parse_comparison_sign();
-                return val;
-            }
-            case lexer_1.TokenType.GreaterOrEqual: {
-                this.eat();
-                var val = this.parse_comparison_sign();
-                return val;
-            }
-            case lexer_1.TokenType.LessOrEqual: {
-                this.eat();
-                var val = this.parse_comparison_sign();
-                return val;
-            }
-            case lexer_1.TokenType.GreaterThan: {
-                this.eat();
-                var val = this.parse_comparison_sign();
-                return val;
-            }
-            case lexer_1.TokenType.LessThan: {
-                this.eat();
-                var val = this.parse_comparison_sign();
-                return val;
             }
             // Unidentified Tokens and Invalid Code Reached
             default:
