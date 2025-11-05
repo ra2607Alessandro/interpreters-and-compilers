@@ -1,6 +1,6 @@
 import { constants } from "buffer";
 import { Env } from "./env";
-import { Program, Statement, VariableDeclare } from "./new_parser";
+import { Program, Statement, VariableDeclare, Object, Property } from "./new_parser";
 import { stat } from "fs";
 
 
@@ -27,6 +27,12 @@ export function eval_stmt(stmt: Statement, env: Env):any {
             env.define(var_dec.ident, value);
             return value;
     } 
+    if (stmt.kind == "Object")
+    {
+          const obj = stmt as Object;
+          const val = obj.properties
+          
+    }
 }
 
 export function eval_expr(expr: Expr):number {

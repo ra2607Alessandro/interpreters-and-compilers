@@ -35,9 +35,15 @@ export interface VariableDeclare extends Statement {
     isCostant: boolean
 }
 
+export interface Property extends Expr{
+    kind: "Property",
+    key: string,
+    value: any
+}
+
 export interface Object extends Expr {
     kind: "Object",
-    properties: Map<string, any>
+    properties: Property[]
 }
 
 export class Parsing {
@@ -151,9 +157,9 @@ export class Parsing {
             }
             value = this.parse_primary_expr()
             this.expect(AllTokens.CloseBrace, "You need to close the brace")
-            const properties = new Map<string, any>();
-
-            return {kind: "Object", properties: properties.set(key.value, value) } as Object
+            
+           const properties = [{kind: "Property", key: key.value, value: value } as Property]
+            return {kind: "Object", properties: properties} as Object
         }
         throw new Error ("Object wasn't costructed well")
     }
