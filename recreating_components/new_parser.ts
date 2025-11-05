@@ -1,3 +1,4 @@
+import { Env } from "./env";
 import { lexer, Token, AllTokens } from "./new_lexer";
 
 export interface Program {
@@ -32,6 +33,11 @@ export interface VariableDeclare extends Statement {
     ident: string,
     value: Expr,
     isCostant: boolean
+}
+
+export interface Object extends Expr {
+    kind: "Object",
+    properties: Map<string, any>
 }
 
 export class Parsing {
@@ -124,8 +130,33 @@ export class Parsing {
         this.expect(AllTokens.Close_Paren, "Expected a closing parenthesis")
         return expr
     }
+    else if (obj.token == AllTokens.OpenBrace){
+        const object = this.parse_object()
+        return object
+    }
     throw new Error ("Are you gonna put something in there?")
   }
+   
+    private parse_object(): Object{
+        this.expect(AllTokens.OpenBrace, "OpenBrace Expected")
+        while(this.not_complete() && this.at().token !== AllTokens.CloseBrace){
+            const key = this.expect(AllTokens.Identifier, "Identifier expected");
+            let value : Expr;
+            if (this.eat().token == AllTokens.Comma || this.eat().token == AllTokens.CloseBrace){
+                const env = new Env();
+                value = env.lookup(key.value)
+            }
+            if (this.eat().token == AllTokens.Colon){
+                value = this.parse_primary_expr()
+            }
+            value = this.parse_primary_expr()
+            this.expect(AllTokens.CloseBrace, "You need to close the brace")
+            const properties = new Map<string, any>();
+
+            return {kind: "Object", properties: properties.set(key.value, value) } as Object
+        }
+        throw new Error ("Object wasn't costructed well")
+    }
 
     private parse_var_declaration(){
     const isCostant = this.at().token == AllTokens.CONST 

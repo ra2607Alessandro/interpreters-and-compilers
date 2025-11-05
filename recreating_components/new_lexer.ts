@@ -8,7 +8,10 @@ export enum AllTokens {
     CONST,
     BinaryOp,
     Comma,
-    END
+    END,
+    OpenBrace,
+    CloseBrace,
+    Colon
 }
 
 export interface Token {
@@ -61,8 +64,17 @@ export function lexer(source_code: string): Token[] {
         else if (src[0]! == ")") {
             stat.push(makeToken(src.shift()!, AllTokens.Close_Paren))
         }
+        else if (src[0]! == "{"){
+            stat.push(makeToken(src.shift()!, AllTokens.OpenBrace))
+        } 
+        else if (src[0]! == "}"){
+            stat.push(makeToken(src.shift()!, AllTokens.CloseBrace))
+        }
         else if (src[0]! == ",") {
             stat.push(makeToken(src.shift()!, AllTokens.Comma))
+        }
+        else if (src[0]! == ":") {
+            stat.push(makeToken(src.shift()!, AllTokens.Colon))
         }
         else if (src[0]! == "=") {
             stat.push(makeToken(src.shift()!, AllTokens.Equal))
