@@ -152,17 +152,24 @@ function eval_for_loop(loop, env) {
     if (loop.init.kind == "VariableDeclare") {
         init = eval_declar_var(loop.init, scope);
     }
-    init = evaluate(loop.init, scope);
-    var cond = evaluate(loop.condition, scope);
-    if (cond.type !== "boolean") {
-        throw new Error("Condition has to be of type boolean");
+    else {
+        init = evaluate(loop.init, scope);
     }
-    var condval = evaluate(loop.condition, scope).value;
-    while (condval == true) {
-        evaluate_consequence(loop.body, scope);
-        evaluate(loop.increment, scope);
+    while (true) {
+        var cond = evaluate(loop.condition, scope);
+        if (cond.type !== "boolean") {
+            throw new Error("Condition has to be of type boolean");
+        }
+        var condval = evaluate(loop.condition, scope).value;
+        if (condval == true) {
+            var body_scope = new environment_1.Environment(scope);
+            evaluate_consequence(loop.body, body_scope);
+            evaluate(loop.increment, scope);
+        }
+        else {
+            return (0, value_1.MK_NULL)();
+        }
     }
-    return (0, value_1.MK_NULL)();
 }
 function eval_while_stmt(stmt, env) {
     while (true) {

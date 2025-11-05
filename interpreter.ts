@@ -182,18 +182,26 @@ function eval_for_loop(loop: ForLoop, env: Environment): RuntimeVal {
        let init : RuntimeVal
        if (loop.init.kind == "VariableDeclare"){
          init = eval_declar_var(loop.init as VariableDeclare, scope)
-       }
+       } else {
        init = evaluate(loop.init, scope)
+       }
+       while (true){
        const cond = evaluate(loop.condition, scope)
        if (cond.type !== "boolean"){
         throw new Error ("Condition has to be of type boolean")
        }
        const condval = (evaluate(loop.condition, scope) as BooleanVal).value
-       while (condval == true){
-          evaluate_consequence(loop.body, scope)
+       if (condval == true){
+        const body_scope = new Environment(scope)
+          evaluate_consequence(loop.body, body_scope)
           evaluate(loop.increment, scope)
        }
+       else {
        return MK_NULL()
+       }
+        
+    }
+    
 }
 
 function eval_while_stmt(stmt: WhileStatement, env: Environment): RuntimeVal{

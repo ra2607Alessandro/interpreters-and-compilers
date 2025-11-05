@@ -185,8 +185,8 @@ export default class Parser {
     let init : VariableDeclare | Expr;
     if (this.at()!.type == TokenType.Let || this.at()!.type == TokenType.Const ){
        init = this.parse_declaration()  
-    }
-    init = this.parse_expr();
+    }else {
+    init = this.parse_expr();}
     this.expect(TokenType.Comma, "',' is expected");
     const cond = this.parse_expr();
     this.expect(TokenType.Comma, "',' is expected");

@@ -134,7 +134,9 @@ var Parser = /** @class */ (function () {
         if (this.at().type == lexer_1.TokenType.Let || this.at().type == lexer_1.TokenType.Const) {
             init = this.parse_declaration();
         }
-        init = this.parse_expr();
+        else {
+            init = this.parse_expr();
+        }
         this.expect(lexer_1.TokenType.Comma, "',' is expected");
         var cond = this.parse_expr();
         this.expect(lexer_1.TokenType.Comma, "',' is expected");
