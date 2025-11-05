@@ -119,9 +119,9 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.parse_while_loop = function () {
         this.eat();
-        this.expect(lexer_1.TokenType.Openparen, " '(' is expected");
+        this.expect(lexer_1.TokenType.Openparen, "'(' is expected");
         var cond = this.parse_expr();
-        this.expect(lexer_1.TokenType.Closeparen, " ')' is expected");
+        this.expect(lexer_1.TokenType.Closeparen, "')' is expected");
         this.expect(lexer_1.TokenType.OpenBrace, "'{' is expected");
         var body = this.parse_consequence();
         this.expect(lexer_1.TokenType.CloseBrace, "'}' is expected");
@@ -134,18 +134,16 @@ var Parser = /** @class */ (function () {
         if (this.at().type == lexer_1.TokenType.Let || this.at().type == lexer_1.TokenType.Const) {
             init = this.parse_declaration();
         }
-        else {
-            init = this.parse_expr();
-        }
-        this.expect(lexer_1.TokenType.Comma, " ',' is expected");
-        var condition = this.parse_expr();
-        this.expect(lexer_1.TokenType.Comma, " ',' is expected");
+        init = this.parse_expr();
+        this.expect(lexer_1.TokenType.Comma, "',' is expected");
+        var cond = this.parse_expr();
+        this.expect(lexer_1.TokenType.Comma, "',' is expected");
         var increment = this.parse_expr();
         this.expect(lexer_1.TokenType.Closeparen, "')' is expected");
-        this.expect(lexer_1.TokenType.OpenBrace, " '{' is expected");
+        this.expect(lexer_1.TokenType.OpenBrace, "'{' is expected");
         var body = this.parse_consequence();
-        this.expect(lexer_1.TokenType.CloseBrace, " '}' is expected");
-        return { kind: "ForLoop", init: init, condition: condition, increment: increment, body: body };
+        this.expect(lexer_1.TokenType.CloseBrace, "'}' is expected");
+        return { kind: "ForLoop", init: init, condition: cond, increment: increment, body: body };
     };
     Parser.prototype.parse_consequence = function () {
         var consequence = [];

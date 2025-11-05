@@ -178,44 +178,37 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
 }
 
 function eval_for_loop(loop: ForLoop, env: Environment): RuntimeVal {
-     const loop_env = new Environment(env);
-     let init = loop.init
-    if ( init.kind == "VariableDeclare" ){
-          eval_declar_var(init as VariableDeclare, loop_env)
-        }
-        else {
-            evaluate(init, loop_env)
-        }
-     while (true){
-        const cond = evaluate(loop.condition, loop_env);
-        if (cond.type !== "boolean"){
-            throw "condition has to be of type boolean"
-        }
-        const condval = (evaluate(loop.condition, loop_env) as BooleanVal).value
-        if (condval == true){
-            const body_scope = new Environment(loop_env);
-            evaluate_consequence(loop.body, body_scope)
-            evaluate(loop.increment, loop_env)
-        }
-        else {
-            return MK_NULL()
-        }
-        
-     }
+       const scope = new Environment(env)
+       let init : RuntimeVal
+       if (loop.init.kind == "VariableDeclare"){
+         init = eval_declar_var(loop.init as VariableDeclare, scope)
+       }
+       init = evaluate(loop.init, scope)
+       const cond = evaluate(loop.condition, scope)
+       if (cond.type !== "boolean"){
+        throw new Error ("Condition has to be of type boolean")
+       }
+       const condval = (evaluate(loop.condition, scope) as BooleanVal).value
+       while (condval == true){
+          evaluate_consequence(loop.body, scope)
+          evaluate(loop.increment, scope)
+       }
+       return MK_NULL()
 }
 
 function eval_while_stmt(stmt: WhileStatement, env: Environment): RuntimeVal{
-    while( true){
+   while (true){
     const cond = evaluate(stmt.condition, env)
     if (cond.type !== "boolean"){
-       throw "condition has to be of type boolean"
+        throw new Error ("Condition has to be of type boolean")
     }
     const condval = (evaluate(stmt.condition, env) as BooleanVal).value
-    if (condval === false){
-        break 
+    if (condval == false){
+        break
     }
-    evaluate_consequence(stmt.body, env)}
-    return MK_NULL()
+    evaluate_consequence(stmt.body, env)
+   }
+   return MK_NULL()
 }
 
 export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
