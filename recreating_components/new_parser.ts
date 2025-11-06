@@ -148,18 +148,18 @@ export class Parsing {
         while(this.not_complete() && this.at().token !== AllTokens.CloseBrace){
             const key = this.expect(AllTokens.Identifier, "Identifier expected");
             let value : Expr;
-            if (this.eat().token == AllTokens.Comma || this.eat().token == AllTokens.CloseBrace){
+            if (this.at().token == AllTokens.Comma || this.eat().token == AllTokens.CloseBrace){
                 const env = new Env();
                 value = env.lookup(key.value)
             }
-            if (this.eat().token == AllTokens.Colon){
+            if (this.at().token == AllTokens.Colon){
                 value = this.parse_primary_expr()
             }
-            value = this.parse_primary_expr()
-            this.expect(AllTokens.CloseBrace, "You need to close the brace")
+            value = this.parse_primary_expr();
+            this.expect(AllTokens.CloseBrace, "You need to close the brace");
             
-           const properties = [{kind: "Property", key: key.value, value: value } as Property]
-            return {kind: "Object", properties: properties} as Object
+           const properties = [{kind: "Property", key: key.value, value: value } as Property];
+           return {kind: "Object", properties: properties} as Object;
         }
         throw new Error ("Object wasn't costructed well")
     }

@@ -1,3 +1,2 @@
-for (let k = 5, k > 0, k = k - 1) {
-    print(k)
-}
+let a = 5
+let shorthand = {a}

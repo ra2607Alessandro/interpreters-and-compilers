@@ -29,9 +29,22 @@ export function eval_stmt(stmt: Statement, env: Env):any {
     } 
     if (stmt.kind == "Object")
     {
-          const obj = stmt as Object;
-          const val = obj.properties
-          
+        const result = new Map<string, any>()
+        const obj = stmt as Object;
+        const prop = obj.properties
+        for (let i = 0; i < obj.properties.length; i++){
+
+          if(!(prop[i].value)){
+            env.lookup(prop[i].key)
+          }    
+        const val = eval_expr(prop[i].value);
+            result.set(prop[i].key, val)
+
+        
+        }
+        
+        return result
+
     }
 }
 
