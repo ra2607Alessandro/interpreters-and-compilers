@@ -1,6 +1,6 @@
 import { constants } from "buffer";
 import { Env } from "./env";
-import { Program, Statement, VariableDeclare, Object, Property } from "./new_parser";
+import { Program, Statement, VariableDeclare } from "./new_parser";
 import { stat } from "fs";
 
 
@@ -8,6 +8,7 @@ export type Expr =
            | {kind: "Number", value: number} 
            | {kind: "BinaryExpression", left: Expr, operator: string, right: Expr}
 
+export type Object = {kind: "Object", properties: [string, any]}
 
 
 export function evaluate(program: Program, env: Env): any {
@@ -44,7 +45,7 @@ export function eval_stmt(stmt: Statement, env: Env):any {
             
           }    
         else { 
-            val = eval_expr(prop[i].value); 
+            val = eval_val(prop[i].value); 
         }
         result.set(prop[i].key, val)
         }
@@ -52,11 +53,19 @@ export function eval_stmt(stmt: Statement, env: Env):any {
     }
 }
 
+export function eval_val(obj: Object):any {
+    if (obj.kind == "Object"){
+
+    }
+
+}
+
 export function eval_expr(expr: Expr):number {
 
     if (expr.kind === "Number"){
         return expr.value
     }
+    
 
     if (expr.kind === "BinaryExpression" )
         {

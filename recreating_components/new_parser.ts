@@ -145,7 +145,6 @@ export class Parsing {
    
     private parse_object(): Object{
         this.expect(AllTokens.OpenBrace, "OpenBrace Expected");
-        this.eat();
         let key : string
         const properties = new Array()
         while(this.not_complete() && this.at().token !== AllTokens.CloseBrace){
@@ -158,6 +157,7 @@ export class Parsing {
                 this.eat();
                 const val = this.parse_primary_expr()
                 properties.push({key, val})
+                break
             case AllTokens.Comma:
                 this.eat()
                 properties.push({key, value: undefined})
