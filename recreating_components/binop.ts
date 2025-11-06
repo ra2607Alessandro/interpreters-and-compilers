@@ -26,14 +26,22 @@ export function eval_stmt(stmt: Statement, env: Env):any {
     if (stmt.kind === "Variable-Declaration" )
     {
             const var_dec = stmt as VariableDeclare;
-            const value = eval_expr( var_dec.value as Expr);
+            const value = eval_val( var_dec.value as Expr, env);
             env.define(var_dec.ident, value);
-            return value;} 
+            return value
+    } 
+}
 
-    if (stmt.kind == "Object")
-    {
-        const result = new Map<string, any>()
-        const obj = stmt as Object;
+export function eval_val(value: any, env: Env):any {
+    if (value.kind == "Object"){
+      return eval_object(value as Object,env)
+    }
+    return eval_expr(value)
+
+}
+export function eval_object(obj: Object, env: Env): Map<string,any>{
+    const result = new Map<string, any>()
+        
         const prop = obj.properties
 
         for (let i = 0; i < obj.properties.length; i++){
@@ -45,20 +53,12 @@ export function eval_stmt(stmt: Statement, env: Env):any {
             
           }    
         else { 
-            val = eval_val(prop[i].value); 
+            val = eval_val(prop[i].value, env); 
         }
         result.set(prop[i].key, val)
         }
         return result
-    }
-}
-
-export function eval_val(obj: Object):any {
-    if (obj.kind == "Object"){
-
-    }
-
-}
+} 
 
 export function eval_expr(expr: Expr):number {
 
