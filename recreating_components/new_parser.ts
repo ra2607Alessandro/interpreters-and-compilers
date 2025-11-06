@@ -144,24 +144,43 @@ export class Parsing {
   }
    
     private parse_object(): Object{
-        this.expect(AllTokens.OpenBrace, "OpenBrace Expected")
+        this.expect(AllTokens.OpenBrace, "OpenBrace Expected");
+        this.eat();
+        let key : string
+        const properties = new Array()
         while(this.not_complete() && this.at().token !== AllTokens.CloseBrace){
-            const key = this.expect(AllTokens.Identifier, "Identifier expected");
-            let value : Expr;
-            if (this.at().token == AllTokens.Comma || this.eat().token == AllTokens.CloseBrace){
-                const env = new Env();
-                value = env.lookup(key.value)
-            }
-            if (this.at().token == AllTokens.Colon){
-                value = this.parse_primary_expr()
-            }
-            value = this.parse_primary_expr();
-            this.expect(AllTokens.CloseBrace, "You need to close the brace");
-            
-           const properties = [{kind: "Property", key: key.value, value: value } as Property];
-           return {kind: "Object", properties: properties} as Object;
+            key = this.expect(AllTokens.Identifier, "Identifier expected").value
+        
+        ;
+        const check = this.at();
+        switch(check.token){
+            case AllTokens.Colon:
+                this.eat();
+                const val = this.parse_primary_expr()
+                properties.push({key, val})
+            case AllTokens.Comma:
+                this.eat()
+                properties.push({key, value: undefined})
+                continue
+            case AllTokens.CloseBrace:
+                properties.push({key, value: undefined})
+                break
+            default:
+                throw new Error ("Token not accepted you bitch")
+
         }
-        throw new Error ("Object wasn't costructed well")
+
+        if(this.at().token !== AllTokens.CloseBrace && this.at().value){
+            this.expect(AllTokens.Comma, "You need to put in a comma")
+        }
+
+        if (this.at().token == AllTokens.Comma){
+            this.eat()
+        }
+      }
+     
+      this.eat()
+      return {kind: "Object", properties: properties} as Object
     }
 
     private parse_var_declaration(){

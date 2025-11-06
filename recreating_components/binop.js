@@ -23,10 +23,13 @@ function eval_stmt(stmt, env) {
         var obj = stmt;
         var prop = obj.properties;
         for (var i = 0; i < obj.properties.length; i++) {
+            var val = void 0;
             if (!(prop[i].value)) {
-                env.lookup(prop[i].key);
+                val = env.lookup(prop[i].key);
             }
-            var val = eval_expr(prop[i].value);
+            else {
+                val = eval_expr(prop[i].value);
+            }
             result.set(prop[i].key, val);
         }
         return result;

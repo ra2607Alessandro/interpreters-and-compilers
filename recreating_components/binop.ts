@@ -21,30 +21,34 @@ export function evaluate(program: Program, env: Env): any {
 }
 
 export function eval_stmt(stmt: Statement, env: Env):any {
+
     if (stmt.kind === "Variable-Declaration" )
-        {   const var_dec = stmt as VariableDeclare;
+    {
+            const var_dec = stmt as VariableDeclare;
             const value = eval_expr( var_dec.value as Expr);
             env.define(var_dec.ident, value);
-            return value;
-    } 
+            return value;} 
+
     if (stmt.kind == "Object")
     {
         const result = new Map<string, any>()
         const obj = stmt as Object;
         const prop = obj.properties
+
         for (let i = 0; i < obj.properties.length; i++){
-
-          if(!(prop[i].value)){
-            env.lookup(prop[i].key)
+        
+        let val : any
+        
+        if(!(prop[i].value)){
+            val = env.lookup(prop[i].key)
+            
           }    
-        const val = eval_expr(prop[i].value);
-            result.set(prop[i].key, val)
-
-        
+        else { 
+            val = eval_expr(prop[i].value); 
         }
-        
+        result.set(prop[i].key, val)
+        }
         return result
-
     }
 }
 

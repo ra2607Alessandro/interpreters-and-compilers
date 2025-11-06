@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Parsing = void 0;
-var env_1 = require("./env");
 var new_lexer_1 = require("./new_lexer");
 var Parsing = /** @class */ (function () {
     function Parsing() {
@@ -93,22 +92,36 @@ var Parsing = /** @class */ (function () {
     };
     Parsing.prototype.parse_object = function () {
         this.expect(new_lexer_1.AllTokens.OpenBrace, "OpenBrace Expected");
+        this.eat();
+        var key;
+        var properties = new Array();
         while (this.not_complete() && this.at().token !== new_lexer_1.AllTokens.CloseBrace) {
-            var key = this.expect(new_lexer_1.AllTokens.Identifier, "Identifier expected");
-            var value = void 0;
-            if (this.at().token == new_lexer_1.AllTokens.Comma || this.eat().token == new_lexer_1.AllTokens.CloseBrace) {
-                var env = new env_1.Env();
-                value = env.lookup(key.value);
+            key = this.expect(new_lexer_1.AllTokens.Identifier, "Identifier expected").value;
+            var check = this.at();
+            switch (check.token) {
+                case new_lexer_1.AllTokens.Colon:
+                    this.eat();
+                    var val = this.parse_primary_expr();
+                    properties.push({ key: key, val: val });
+                case new_lexer_1.AllTokens.Comma:
+                    this.eat();
+                    properties.push({ key: key, value: undefined });
+                    continue;
+                case new_lexer_1.AllTokens.CloseBrace:
+                    properties.push({ key: key, value: undefined });
+                    break;
+                default:
+                    throw new Error("Token not accepted you bitch");
             }
-            if (this.at().token == new_lexer_1.AllTokens.Colon) {
-                value = this.parse_primary_expr();
+            if (this.at().token !== new_lexer_1.AllTokens.CloseBrace && this.at().value) {
+                this.expect(new_lexer_1.AllTokens.Comma, "You need to put in a comma");
             }
-            value = this.parse_primary_expr();
-            this.expect(new_lexer_1.AllTokens.CloseBrace, "You need to close the brace");
-            var properties = [{ kind: "Property", key: key.value, value: value }];
-            return { kind: "Object", properties: properties };
+            if (this.at().token == new_lexer_1.AllTokens.Comma) {
+                this.eat();
+            }
         }
-        throw new Error("Object wasn't costructed well");
+        this.eat();
+        return { kind: "Object", properties: properties };
     };
     Parsing.prototype.parse_var_declaration = function () {
         var isCostant = this.at().token == new_lexer_1.AllTokens.CONST;
