@@ -216,6 +216,7 @@ export class Parsing {
             body.push(stat)
 
         }
+        this.expect(AllTokens.CloseBrace, "'}' is expected");
         return {kind: "Function", ident: name.value, params: params, body: body } as Function
     }
 
