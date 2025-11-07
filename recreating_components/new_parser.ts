@@ -28,6 +28,13 @@ interface BinaryExpr extends Expr {
     right: Expr
 }
 
+export interface Function extends Statement{
+    kind: "Function",
+    ident: string,
+    params: string[],
+    body: Statement[]
+}
+
 
 export interface VariableDeclare extends Statement {
     kind: "Variable-Declaration",
@@ -88,7 +95,7 @@ export class Parsing {
     return program
     }
 
-  private parse_statements()  {
+  private parse_statements() {
      const current = this.at()
         if (current.token == AllTokens.LET || current.token == AllTokens.CONST){
            return this.parse_var_declaration()
@@ -188,19 +195,28 @@ export class Parsing {
     }
 
 
-    private parse_function(){
+    private parse_function(): Function{
         this.eat();
         const name = this.expect(AllTokens.Identifier, "The name of a function must be an identifier");
         this.expect(AllTokens.Open_Paren, "You need to insert the parameters of the function. Open '('");
-        const params : AllTokens.Identifier[] = []
+        const params : string[] = []
         while (this.at().token !== AllTokens.Close_Paren){
             if (this.at().token == AllTokens.Identifier){
-                const param = this.at().token 
-                this.expect(AllTokens.Colon, "You need to identify the parameter bro");
-                const val = this.parse_primary_expr()
+                const param = this.at().value
                 params.push(param)
             }
+            if (this.at().token == AllTokens.Comma){
+                this.expect(AllTokens.Identifier, "You either put another identifier or you close the params")
+            }
         }
+        this.expect(AllTokens.OpenBrace, "You need to start the statements body with '{'");
+        const body : Statement[] = [];
+        while(this.at().token !== AllTokens.CloseBrace){
+            const stat = this.parse_statements();
+            body.push(stat)
+
+        }
+        return {kind: "Function", ident: name.value, params: params, body: body } as Function
     }
 
 
