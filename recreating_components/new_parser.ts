@@ -1,3 +1,4 @@
+import { Identifier } from "../ast";
 import { Env } from "./env";
 import { lexer, Token, AllTokens } from "./new_lexer";
 
@@ -92,6 +93,9 @@ export class Parsing {
         if (current.token == AllTokens.LET || current.token == AllTokens.CONST){
            return this.parse_var_declaration()
         }
+        if (current.token == AllTokens.FN){
+            return this.parse_function()
+        }
         console.log(current)    
         throw new Error("bro, what the fuck? Whenever you start a statement you need to declare a variable with const or let")
   }
@@ -143,7 +147,7 @@ export class Parsing {
     throw new Error ("Are you gonna put something in there?")
   }
    
-    private parse_object(): Object{
+   private parse_object(): Object{
         this.expect(AllTokens.OpenBrace, "OpenBrace Expected");
         let key : string
         const properties = new Array()
@@ -182,6 +186,24 @@ export class Parsing {
       this.eat()
       return {kind: "Object", properties: properties} as Object
     }
+
+
+    private parse_function(){
+        this.eat();
+        const name = this.expect(AllTokens.Identifier, "The name of a function must be an identifier");
+        this.expect(AllTokens.Open_Paren, "You need to insert the parameters of the function. Open '('");
+        const params : AllTokens.Identifier[] = []
+        while (this.at().token !== AllTokens.Close_Paren){
+            if (this.at().token == AllTokens.Identifier){
+                const param = this.at().token 
+                this.expect(AllTokens.Colon, "You need to identify the parameter bro");
+                const val = this.parse_primary_expr()
+                params.push(param)
+            }
+        }
+    }
+
+
 
     private parse_var_declaration(){
     const isCostant = this.at().token == AllTokens.CONST 

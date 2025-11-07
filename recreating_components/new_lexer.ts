@@ -11,7 +11,8 @@ export enum AllTokens {
     END,
     OpenBrace,
     CloseBrace,
-    Colon
+    Colon,
+    FN 
 }
 
 export interface Token {
@@ -25,7 +26,8 @@ export function makeToken(val: string, tok: AllTokens): Token {
 
 const KORT : Record<string, AllTokens> = {
         "let" : AllTokens.LET,
-        "const" : AllTokens.CONST
+        "const" : AllTokens.CONST,
+        "function" : AllTokens.FN
 }
 
 export function IsNumber(src: string) {
