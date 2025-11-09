@@ -36,7 +36,9 @@ export interface FunctionDec extends Statement{
 }
 
 export interface FunctionCall extends Statement {
-    
+    kind: "FunctionCall",
+    callee: string,
+    args: Expr[]
 }
 
 
@@ -155,6 +157,10 @@ export class Parsing {
         const object = this.parse_object()
         return object
     }
+    else if (obj.token == AllTokens.Identifier){
+        const fn = this.parse_function_call()
+        return fn
+    }
     throw new Error ("Are you gonna put something in there?")
   }
    
@@ -199,7 +205,7 @@ export class Parsing {
     }
 
 
-    private parse_function(): Function{
+    private parse_function(): FunctionDec{
         this.eat();
         const name = this.expect(AllTokens.Identifier, "The name of a function must be an identifier");
         this.expect(AllTokens.Open_Paren, "You need to insert the parameters of the function. Open '('");
@@ -221,9 +227,25 @@ export class Parsing {
 
         }
         this.expect(AllTokens.CloseBrace, "'}' is expected");
-        return {kind: "Function", ident: name.value, params: params, body: body } as Function
+        return {kind: "Function", ident: name.value, params: params, body: body } as FunctionDec
     }
+    
 
+    private parse_function_call():FunctionCall {
+        this.eat();
+        const name = this.expect(AllTokens.Identifier, "You must add a name to the function").value;
+        this.expect(AllTokens.Open_Paren, "'(' is expected")
+        const args : Expr[] = [];
+        while(this.at()!.token == AllTokens.Close_Paren){
+            if(this.at()!.token == AllTokens.Number){
+                const arg = {kind: "Number", value: parseFloat(this.at()!.value)} as NumericLiteral
+                args.push(arg)
+            }
+        }
+        this.expect(AllTokens.Close_Paren, "')' is expected")
+        return {kind:"FunctionCall", callee: name, args: args} as FunctionCall
+
+    }
 
 
     private parse_var_declaration(){
