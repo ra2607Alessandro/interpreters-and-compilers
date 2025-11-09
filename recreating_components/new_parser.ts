@@ -158,8 +158,11 @@ export class Parsing {
         return object
     }
     else if (obj.token == AllTokens.Identifier){
+        if(this.eat().token == AllTokens.Open_Paren){
         const fn = this.parse_function_call()
-        return fn
+        return fn  
+        }
+        return {kind: "identifier", value: obj} as Expr
     }
     throw new Error ("Are you gonna put something in there?")
   }
@@ -214,6 +217,7 @@ export class Parsing {
             if (this.at().token == AllTokens.Identifier){
                 const param = this.at().value
                 params.push(param)
+                this.eat()
             }
             if (this.at().token == AllTokens.Comma){
                 this.expect(AllTokens.Identifier, "You either put another identifier or you close the params")
@@ -232,11 +236,10 @@ export class Parsing {
     
 
     private parse_function_call():FunctionCall {
-        this.eat();
         const name = this.expect(AllTokens.Identifier, "You must add a name to the function").value;
         this.expect(AllTokens.Open_Paren, "'(' is expected")
         const args : Expr[] = [];
-        while(this.at()!.token == AllTokens.Close_Paren){
+        while(this.at()!.token !== AllTokens.Close_Paren){
             if(this.at()!.token == AllTokens.Number){
                 const arg = {kind: "Number", value: parseFloat(this.at()!.value)} as NumericLiteral
                 args.push(arg)
