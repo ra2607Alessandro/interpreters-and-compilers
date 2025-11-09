@@ -1,6 +1,6 @@
 import { constants } from "buffer";
 import { Env } from "./env";
-import { FunctionDec, Program, Statement, VariableDeclare } from "./new_parser";
+import { FunctionCall, FunctionDec, Program, Statement, VariableDeclare } from "./new_parser";
 import { stat } from "fs";
 import { env } from "process";
 
@@ -64,15 +64,33 @@ export function eval_object(obj: Object, env: Env): Map<string,any>{
 } 
 export function eval_function_dec(fn: FunctionDec, env: Env): Function {
     const fn_env = new Env(env);
+    fn_env.assign(fn.ident, fn.params);
     return  {type: "Function", name: fn.ident, params: fn.params, body: fn.body, declarationEnv: fn_env} as Function;
 }
 
-export function eval_function(fn: Function, env: Env){
-    if (!(env.lookup(fn.name))){
-        throw new Error ("This function wasn't defined in the environment");
-    }
-    const exec_env = new Env(fn.declarationEnv);
+export function eval_function(fn: FunctionCall, env: Env){
     
+    let vals : number[] = [];
+    for (const arg of fn.args){
+    const val = eval_expr(arg as Expr);
+    vals.push(val);
+   }
+
+   const func_dec = env.lookup(fn.callee) as Function;
+   const new_env = new Env(func_dec.declarationEnv);
+   if (func_dec.params.length == fn.args.length){
+       for (let i = 0; i < func_dec.params.length; i++){
+        new_env.define(func_dec.params[i], fn.args[i]);
+       }
+   }
+   
+   const body : Statement[] = [];
+   const last_stat = body.length - 1
+   for(const stat of func_dec.body){
+       body.push(eval_stmt(stat, new_env))
+   }
+   return body[last_stat]
+
 }
 
 
