@@ -1,14 +1,17 @@
 import { constants } from "buffer";
 import { Env } from "./env";
-import { Program, Statement, VariableDeclare } from "./new_parser";
+import { FunctionDec, Program, Statement, VariableDeclare } from "./new_parser";
 import { stat } from "fs";
+import { env } from "process";
 
 
 export type Expr = 
-           | {kind: "Number", value: number} 
+           | {kind: "Number", value: number }
            | {kind: "BinaryExpression", left: Expr, operator: string, right: Expr}
 
 export type Object = {kind: "Object", properties: [string, any]}
+
+export type Function = {type: "Function", name: string, params: string[], body: Statement[], declarationEnv: Env}
 
 
 export function evaluate(program: Program, env: Env): any {
@@ -59,6 +62,19 @@ export function eval_object(obj: Object, env: Env): Map<string,any>{
         }
         return result
 } 
+export function eval_function_dec(fn: FunctionDec, env: Env): Function {
+    const fn_env = new Env(env);
+    return  {type: "Function", name: fn.ident, params: fn.params, body: fn.body, declarationEnv: fn_env} as Function;
+}
+
+export function eval_function(fn: Function, env: Env){
+    if (!(env.lookup(fn.name))){
+        throw new Error ("This function wasn't defined in the environment");
+    }
+    const exec_env = new Env(fn.declarationEnv);
+    
+}
+
 
 export function eval_expr(expr: Expr):number {
 

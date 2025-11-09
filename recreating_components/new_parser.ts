@@ -28,11 +28,15 @@ interface BinaryExpr extends Expr {
     right: Expr
 }
 
-export interface Function extends Statement{
+export interface FunctionDec extends Statement{
     kind: "Function",
     ident: string,
     params: string[],
     body: Statement[]
+}
+
+export interface FunctionCall extends Statement {
+    
 }
 
 
