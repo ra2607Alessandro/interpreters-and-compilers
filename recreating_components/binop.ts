@@ -123,7 +123,8 @@ export function eval_expr(expr: Expr, env: Env):number {
     }
     
     if (expr.kind === "Identifier") {
-       return env.lookup(expr.value)
+        const ident = expr as any
+       return env.lookup(ident.value)
     }
 
     if (expr.kind === "BinaryExpression" )
