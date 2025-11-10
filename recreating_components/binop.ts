@@ -8,10 +8,13 @@ import { env } from "process";
 export type Expr = 
            | {kind: "Number", value: number }
            | {kind: "BinaryExpression", left: Expr, operator: string, right: Expr}
+           | {kind: "ExpressionStatement", expression: Expr}
 
 export type Object = {kind: "Object", properties: [string, any]}
 
 export type Function = {type: "Function", name: string, params: string[], body: Statement[], declarationEnv: Env}
+
+
 
 
 export function evaluate(program: Program, env: Env): any {
@@ -46,7 +49,8 @@ export function eval_stmt(stmt: Statement, env: Env):any {
         return fn_dec
     }
     if (stmt.kind === "ExpressionStatement"){
-        eval_expr(stmt as Expr)
+        const val = stmt as Expr
+        eval_val(val,env)
     }
     if (stmt.kind === "FunctionCall"){
         eval_function_call(stmt as FunctionCall, env)
@@ -109,6 +113,10 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
 
 export function eval_expr(expr: Expr):number {
 
+    if (expr.kind === "ExpressionStatement"){
+        return eval_expr(expr.expression)
+    }
+
     if (expr.kind === "Number"){
         return expr.value
     }
@@ -131,8 +139,10 @@ export function eval_expr(expr: Expr):number {
             default:
                 throw `the operator sign ${expr.operator} is not supported`
 
-        }
+        } 
     }
+
+   
 
     else {
         throw new Error ("The Expression is not acceptable")
