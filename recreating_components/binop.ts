@@ -9,6 +9,7 @@ export type Expr =
            | {kind: "Number", value: number }
            | {kind: "BinaryExpression", left: Expr, operator: string, right: Expr}
            | {kind: "ExpressionStatement", expression: Expr}
+           | {kind: "Identifier", value: string}
 
 export type Object = {kind: "Object", properties: [string, any]}
 
@@ -61,7 +62,7 @@ export function eval_val(value: any, env: Env):any {
     if (value.kind == "Object"){
       return eval_object(value as Object,env)
     }
-    return eval_expr(value)
+    return eval_expr(value, env)
 
 }
 export function eval_object(obj: Object, env: Env): Map<string,any>{
@@ -111,21 +112,24 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
 }
 
 
-export function eval_expr(expr: Expr):number {
+export function eval_expr(expr: Expr, env: Env):number {
 
     if (expr.kind === "ExpressionStatement"){
-        return eval_expr(expr.expression)
+        return eval_expr(expr.expression, env)
     }
 
     if (expr.kind === "Number"){
         return expr.value
     }
     
+    if (expr.kind === "Identifier") {
+       return env.lookup(expr.value)
+    }
 
     if (expr.kind === "BinaryExpression" )
         {
-        const leftval = eval_expr(expr.left);
-        const rightval = eval_expr(expr.right); 
+        const leftval = eval_expr(expr.left, env);
+        const rightval = eval_expr(expr.right,env); 
         
         switch(expr.operator){
             case "+":
