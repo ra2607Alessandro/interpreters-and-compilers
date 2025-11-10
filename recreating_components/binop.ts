@@ -33,6 +33,21 @@ export function eval_stmt(stmt: Statement, env: Env):any {
             env.define(var_dec.ident, value);
             return value
     } 
+    if (stmt.kind === "Function")
+    {
+        const fn = stmt as FunctionDec;
+        const fn_dec = {
+            type: "function",
+            ident: fn.ident,
+            params: fn.params,
+            body: fn.body
+        } 
+        env.define(fn.ident, fn_dec)
+        return fn_dec
+    }
+    if (stmt.kind === "FunctionCall"){
+        eval_function_call(stmt as FunctionCall, env)
+    }
 }
 
 export function eval_val(value: any, env: Env):any {
@@ -64,33 +79,28 @@ export function eval_object(obj: Object, env: Env): Map<string,any>{
 } 
 export function eval_function_dec(fn: FunctionDec, env: Env): Function {
     const fn_env = new Env(env);
-    fn_env.assign(fn.ident, fn.params);
     return  {type: "Function", name: fn.ident, params: fn.params, body: fn.body, declarationEnv: fn_env} as Function;
 }
 
-export function eval_function(fn: FunctionCall, env: Env){
+export function eval_function_call(fn: FunctionCall, env: Env): any{
     
-    let vals : number[] = [];
+    const args  : Expr[] = [];
     for (const arg of fn.args){
-    const val = eval_expr(arg as Expr);
-    vals.push(val);
-   }
-
-   const func_dec = env.lookup(fn.callee) as Function;
-   const new_env = new Env(func_dec.declarationEnv);
-   if (func_dec.params.length == fn.args.length){
-       for (let i = 0; i < func_dec.params.length; i++){
-        new_env.define(func_dec.params[i], fn.args[i]);
-       }
-   }
-   
-   const body : Statement[] = [];
-   const last_stat = body.length - 1
-   for(const stat of func_dec.body){
-       body.push(eval_stmt(stat, new_env))
-   }
-   return body[last_stat]
-
+        args.push(eval_val(arg, env))
+    } 
+    const func = env.lookup(fn.callee)
+    if (func.type !== "Function"){
+        throw new Error ("Function not retrieved man")
+    }
+    const exec_env = new Env(func.declarationENV)
+    for (let i = 0; i < func.parameters.length; i++){
+        env.assign(func.parameters[i], args[i]);
+    }
+    let last : any = undefined;
+    for (const stmt of func.body){
+        last = eval_stmt(stmt, exec_env)
+    }
+    return last
 }
 
 

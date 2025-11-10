@@ -1,4 +1,4 @@
-import { Identifier } from "../ast";
+
 import { Env } from "./env";
 import { lexer, Token, AllTokens } from "./new_lexer";
 
@@ -10,6 +10,11 @@ export interface Program {
 export interface Statement {
     kind: string
 
+}
+
+export interface Identifier{
+    kind : "identifier",
+    value: string
 }
 
 export interface Expr {
@@ -158,11 +163,12 @@ export class Parsing {
         return object
     }
     else if (obj.token == AllTokens.Identifier){
-        if(this.eat().token == AllTokens.Open_Paren){
-        const fn = this.parse_function_call()
+        const name = this.eat().value
+        if(this.at().token == AllTokens.Open_Paren){
+        const fn = this.parse_function_call(name)
         return fn  
         }
-        return {kind: "identifier", value: obj} as Expr
+        return {kind: "identifier", value: obj.value} as Identifier
     }
     throw new Error ("Are you gonna put something in there?")
   }
@@ -235,18 +241,24 @@ export class Parsing {
     }
     
 
-    private parse_function_call():FunctionCall {
-        const name = this.expect(AllTokens.Identifier, "You must add a name to the function").value;
+    private parse_function_call(n : string):FunctionCall {
         this.expect(AllTokens.Open_Paren, "'(' is expected")
         const args : Expr[] = [];
         while(this.at()!.token !== AllTokens.Close_Paren){
-            if(this.at()!.token == AllTokens.Number){
-                const arg = {kind: "Number", value: parseFloat(this.at()!.value)} as NumericLiteral
-                args.push(arg)
+            args.push(this.parse_additive_expr());
+            if (this.at().token == AllTokens.Comma){
+                this.eat();
             }
+            else if (this.at().token == AllTokens.CloseBrace){
+                break
+            }
+            else {
+                throw new Error ("Bro, literally just no !")
+            }
+
         }
         this.expect(AllTokens.Close_Paren, "')' is expected")
-        return {kind:"FunctionCall", callee: name, args: args} as FunctionCall
+        return {kind:"FunctionCall", callee: n, args: args} as FunctionCall
 
     }
 
