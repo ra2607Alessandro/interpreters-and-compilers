@@ -260,6 +260,7 @@ export class Parsing {
                 break
             }
             else {
+                console.log(this.at())
                 throw new Error ("Bro, literally just no !")
             }
 
