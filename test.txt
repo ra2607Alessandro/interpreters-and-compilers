@@ -1,2 +1,5 @@
-let a = 5
-let shorthand = {a}
+function double(x) {
+    x * 2
+}
+
+let answer = double(7)

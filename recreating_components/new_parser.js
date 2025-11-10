@@ -41,6 +41,9 @@ var Parsing = /** @class */ (function () {
         if (current.token == new_lexer_1.AllTokens.LET || current.token == new_lexer_1.AllTokens.CONST) {
             return this.parse_var_declaration();
         }
+        if (current.token == new_lexer_1.AllTokens.FN) {
+            return this.parse_function();
+        }
         console.log(current);
         throw new Error("bro, what the fuck? Whenever you start a statement you need to declare a variable with const or let");
     };
@@ -88,6 +91,14 @@ var Parsing = /** @class */ (function () {
             var object = this.parse_object();
             return object;
         }
+        else if (obj.token == new_lexer_1.AllTokens.Identifier) {
+            var name_1 = this.eat().value;
+            if (this.at().token == new_lexer_1.AllTokens.Open_Paren) {
+                var fn = this.parse_function_call(name_1);
+                return fn;
+            }
+            return { kind: "identifier", value: obj.value };
+        }
         throw new Error("Are you gonna put something in there?");
     };
     Parsing.prototype.parse_object = function () {
@@ -122,6 +133,49 @@ var Parsing = /** @class */ (function () {
         }
         this.eat();
         return { kind: "Object", properties: properties };
+    };
+    Parsing.prototype.parse_function = function () {
+        this.eat();
+        var name = this.expect(new_lexer_1.AllTokens.Identifier, "The name of a function must be an identifier");
+        this.expect(new_lexer_1.AllTokens.Open_Paren, "You need to insert the parameters of the function. Open '('");
+        var params = [];
+        while (this.at().token !== new_lexer_1.AllTokens.Close_Paren) {
+            if (this.at().token == new_lexer_1.AllTokens.Identifier) {
+                var param = this.at().value;
+                params.push(param);
+                this.eat();
+            }
+            if (this.at().token == new_lexer_1.AllTokens.Comma) {
+                this.expect(new_lexer_1.AllTokens.Identifier, "You either put another identifier or you close the params");
+            }
+        }
+        this.expect(new_lexer_1.AllTokens.Close_Paren, "'(' expected");
+        this.expect(new_lexer_1.AllTokens.OpenBrace, "You need to start the statements body with '{'");
+        var body = [];
+        while (this.at().token !== new_lexer_1.AllTokens.CloseBrace) {
+            var stat = this.parse_statements();
+            body.push(stat);
+        }
+        this.expect(new_lexer_1.AllTokens.CloseBrace, "'}' is expected");
+        return { kind: "Function", ident: name.value, params: params, body: body };
+    };
+    Parsing.prototype.parse_function_call = function (n) {
+        this.expect(new_lexer_1.AllTokens.Open_Paren, "'(' is expected");
+        var args = [];
+        while (this.at().token !== new_lexer_1.AllTokens.Close_Paren) {
+            args.push(this.parse_additive_expr());
+            if (this.at().token == new_lexer_1.AllTokens.Comma) {
+                this.eat();
+            }
+            else if (this.at().token == new_lexer_1.AllTokens.CloseBrace) {
+                break;
+            }
+            else {
+                throw new Error("Bro, literally just no !");
+            }
+        }
+        this.expect(new_lexer_1.AllTokens.Close_Paren, "')' is expected");
+        return { kind: "FunctionCall", callee: n, args: args };
     };
     Parsing.prototype.parse_var_declaration = function () {
         var isCostant = this.at().token == new_lexer_1.AllTokens.CONST;

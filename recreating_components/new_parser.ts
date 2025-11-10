@@ -229,6 +229,7 @@ export class Parsing {
                 this.expect(AllTokens.Identifier, "You either put another identifier or you close the params")
             }
         }
+        this.expect(AllTokens.Close_Paren, "'(' expected")
         this.expect(AllTokens.OpenBrace, "You need to start the statements body with '{'");
         const body : Statement[] = [];
         while(this.at().token !== AllTokens.CloseBrace){

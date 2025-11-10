@@ -21,13 +21,15 @@ var AllTokens;
     AllTokens[AllTokens["OpenBrace"] = 10] = "OpenBrace";
     AllTokens[AllTokens["CloseBrace"] = 11] = "CloseBrace";
     AllTokens[AllTokens["Colon"] = 12] = "Colon";
+    AllTokens[AllTokens["FN"] = 13] = "FN";
 })(AllTokens || (exports.AllTokens = AllTokens = {}));
 function makeToken(val, tok) {
     return { value: val, token: tok };
 }
 var KORT = {
     "let": AllTokens.LET,
-    "const": AllTokens.CONST
+    "const": AllTokens.CONST,
+    "function": AllTokens.FN
 };
 function IsNumber(src) {
     var c = src.charCodeAt(0);
