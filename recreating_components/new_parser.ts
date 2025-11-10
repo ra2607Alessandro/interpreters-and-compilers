@@ -256,7 +256,7 @@ export class Parsing {
             if (this.at().token == AllTokens.Comma){
                 this.eat();
             }
-            else if (this.at().token == AllTokens.CloseBrace){
+            else if (this.at().token == AllTokens.Close_Paren){
                 break
             }
             else {
