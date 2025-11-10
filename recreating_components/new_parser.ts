@@ -46,6 +46,10 @@ export interface FunctionCall extends Statement {
     args: Expr[]
 }
 
+export interface ExpressionStatement extends Statement {
+    kind: "ExpressionStatement",
+    expression: Expr
+}
 
 export interface VariableDeclare extends Statement {
     kind: "Variable-Declaration",
@@ -114,8 +118,10 @@ export class Parsing {
         if (current.token == AllTokens.FN){
             return this.parse_function()
         }
-        console.log(current)    
-        throw new Error("bro, what the fuck? Whenever you start a statement you need to declare a variable with const or let")
+        return {
+            kind: "ExpressionStatement" , 
+            expression: this.parse_additive_expr()
+        } as ExpressionStatement
   }
 
   private parse_additive_expr(): Expr {

@@ -45,6 +45,9 @@ export function eval_stmt(stmt: Statement, env: Env):any {
         env.define(fn.ident, fn_dec)
         return fn_dec
     }
+    if (stmt.kind === "ExpressionStatement"){
+        eval_expr(stmt as Expr)
+    }
     if (stmt.kind === "FunctionCall"){
         eval_function_call(stmt as FunctionCall, env)
     }
@@ -94,7 +97,7 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
     }
     const exec_env = new Env(func.declarationENV)
     for (let i = 0; i < func.parameters.length; i++){
-        env.assign(func.parameters[i], args[i]);
+        env.define(func.parameters[i], args[i]);
     }
     let last : any = undefined;
     for (const stmt of func.body){
