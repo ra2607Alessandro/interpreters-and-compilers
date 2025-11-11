@@ -1,22 +1,20 @@
 import { constants } from "buffer";
 import { Env } from "./env";
-import { FunctionCall, FunctionDec, Program, Statement, VariableDeclare } from "./new_parser";
+import { FunctionCall, FunctionDec, Program, Statement, VariableDeclare, ExpressionStatement } from "./new_parser";
 import { stat } from "fs";
 import { env } from "process";
+
 
 
 export type Expr = 
            | {kind: "Number", value: number }
            | {kind: "BinaryExpression", left: Expr, operator: string, right: Expr}
-           | {kind: "ExpressionStatement", expression: Expr}
+           | {kind: "FunctionCall", callee: string, args: Expr[]}
            | {kind: "Identifier", value: string}
 
 export type Object = {kind: "Object", properties: [string, any]}
 
 export type Function = {type: "Function", name: string, params: string[], body: Statement[], declarationEnv: Env}
-
-
-
 
 export function evaluate(program: Program, env: Env): any {
     let last_result  = undefined ;
@@ -48,10 +46,6 @@ export function eval_stmt(stmt: Statement, env: Env):any {
         } 
         env.define(fn.ident, fn_dec)
         return fn_dec
-    }
-    if (stmt.kind === "ExpressionStatement"){
-        const val = stmt as Expr
-        eval_val(val,env)
     }
     if (stmt.kind === "FunctionCall"){
         eval_function_call(stmt as FunctionCall, env)
@@ -114,10 +108,7 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
 
 export function eval_expr(expr: Expr, env: Env):number {
 
-    if (expr.kind === "ExpressionStatement"){
-        return eval_expr(expr.expression, env)
-    }
-
+   
     if (expr.kind === "Number"){
         return expr.value
     }
@@ -150,6 +141,7 @@ export function eval_expr(expr: Expr, env: Env):number {
    
 
     else {
+        console.log(expr)
         throw new Error ("The Expression is not acceptable")
     }
 }
