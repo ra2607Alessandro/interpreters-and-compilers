@@ -50,7 +50,7 @@ export function eval_stmt(stmt: Statement, env: Env):any {
     if (stmt.kind === "FunctionCall"){
        return eval_function_call(stmt as FunctionCall, env)
     }
-     if (stmt.kind === "ExpressionStatement") {
+    if (stmt.kind === "ExpressionStatement") {
         const exprStmt = stmt as any; // You need the ExpressionStatement type
         return eval_val(exprStmt.expression, env);
     }
@@ -113,10 +113,13 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
 }
 
 
-export function eval_expr(expr: Expr, env: Env):number {
+export function eval_expr(expr: any, env: Env):number {
 
    if ( expr.kind=="ExpressionStatement" ){
     return eval_expr(expr.expression, env)
+   }
+   if (expr.kind == "FunctionCall"){
+    return eval_stmt(expr, env)
    }
 
     if (expr.kind === "Number"){
@@ -147,8 +150,6 @@ export function eval_expr(expr: Expr, env: Env):number {
 
         } 
     }
-
-   
 
     else {
         console.log(expr)

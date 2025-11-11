@@ -93,6 +93,9 @@ function eval_expr(expr, env) {
     if (expr.kind == "ExpressionStatement") {
         return eval_expr(expr.expression, env);
     }
+    if (expr.kind == "FunctionCall") {
+        return eval_stmt(expr, env);
+    }
     if (expr.kind === "Number") {
         return expr.value;
     }
