@@ -9,7 +9,7 @@ import { env } from "process";
 export type Expr = 
            | {kind: "Number", value: number }
            | {kind: "BinaryExpression", left: Expr, operator: string, right: Expr}
-           | {kind: "FunctionCall", callee: string, args: Expr[]}
+           | {kind: "ExprStmt", expression: Expr}
            | {kind: "Identifier", value: string}
 
 export type Object = {kind: "Object", properties: [string, any]}
@@ -50,6 +50,13 @@ export function eval_stmt(stmt: Statement, env: Env):any {
     if (stmt.kind === "FunctionCall"){
         eval_function_call(stmt as FunctionCall, env)
     }
+     if (stmt.kind === "ExpressionStatement") {
+        const exprStmt = stmt as any; // You need the ExpressionStatement type
+        return eval_val(exprStmt.expression, env);
+    }
+    
+    throw new Error(`Unknown statement type: ${stmt.kind}`);
+
 }
 
 export function eval_val(value: any, env: Env):any {
@@ -108,7 +115,9 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
 
 export function eval_expr(expr: Expr, env: Env):number {
 
-   
+   if (expr.kind == "ExprStmt"){
+      return eval_expr(expr, env)
+   }
     if (expr.kind === "Number"){
         return expr.value
     }

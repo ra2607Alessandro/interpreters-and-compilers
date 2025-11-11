@@ -37,6 +37,11 @@ function eval_stmt(stmt, env) {
     if (stmt.kind === "FunctionCall") {
         eval_function_call(stmt, env);
     }
+    if (stmt.kind === "ExpressionStatement") {
+        var exprStmt = stmt; // You need the ExpressionStatement type
+        return eval_val(exprStmt.expression, env);
+    }
+    throw new Error("Unknown statement type: ".concat(stmt.kind));
 }
 function eval_val(value, env) {
     if (value.kind == "Object") {
@@ -85,6 +90,9 @@ function eval_function_call(fn, env) {
     return last;
 }
 function eval_expr(expr, env) {
+    if (expr.kind == "ExprStmt") {
+        return eval_expr(expr, env);
+    }
     if (expr.kind === "Number") {
         return expr.value;
     }
