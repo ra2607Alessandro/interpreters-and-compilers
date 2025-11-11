@@ -35,7 +35,7 @@ function eval_stmt(stmt, env) {
         return fn_dec;
     }
     if (stmt.kind === "FunctionCall") {
-        eval_function_call(stmt, env);
+        return eval_function_call(stmt, env);
     }
     if (stmt.kind === "ExpressionStatement") {
         var exprStmt = stmt; // You need the ExpressionStatement type
@@ -75,12 +75,12 @@ function eval_function_call(fn, env) {
         args.push(eval_val(arg, env));
     }
     var func = env.lookup(fn.callee);
-    if (func.type !== "Function") {
+    if (func.type !== "function") {
         throw new Error("Function not retrieved man");
     }
     var exec_env = new env_1.Env(func.declarationENV);
     for (var i = 0; i < func.parameters.length; i++) {
-        env.define(func.parameters[i], args[i]);
+        exec_env.define(func.parameters[i], args[i]);
     }
     var last = undefined;
     for (var _b = 0, _c = func.body; _b < _c.length; _b++) {
@@ -90,13 +90,10 @@ function eval_function_call(fn, env) {
     return last;
 }
 function eval_expr(expr, env) {
-    if (expr.kind == "ExprStmt") {
-        return eval_expr(expr, env);
-    }
     if (expr.kind === "Number") {
         return expr.value;
     }
-    if (expr.kind === "Identifier") {
+    if (expr.kind === "identifier") {
         var ident = expr;
         return env.lookup(ident.value);
     }

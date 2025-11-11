@@ -1,6 +1,6 @@
 import { constants } from "buffer";
 import { Env } from "./env";
-import { FunctionCall, FunctionDec, Program, Statement, VariableDeclare, ExpressionStatement } from "./new_parser";
+import { FunctionCall, FunctionDec, Program, Statement, VariableDeclare, Identifier, ExpressionStatement } from "./new_parser";
 import { stat } from "fs";
 import { env } from "process";
 
@@ -9,8 +9,8 @@ import { env } from "process";
 export type Expr = 
            | {kind: "Number", value: number }
            | {kind: "BinaryExpression", left: Expr, operator: string, right: Expr}
-           | {kind: "ExprStmt", expression: Expr}
-           | {kind: "Identifier", value: string}
+           | {kind: "ExpressionStatement", expression: Expr}
+           | {kind: "identifier", value: string}
 
 export type Object = {kind: "Object", properties: [string, any]}
 
@@ -48,7 +48,7 @@ export function eval_stmt(stmt: Statement, env: Env):any {
         return fn_dec
     }
     if (stmt.kind === "FunctionCall"){
-        eval_function_call(stmt as FunctionCall, env)
+       return eval_function_call(stmt as FunctionCall, env)
     }
      if (stmt.kind === "ExpressionStatement") {
         const exprStmt = stmt as any; // You need the ExpressionStatement type
@@ -93,17 +93,17 @@ export function eval_function_dec(fn: FunctionDec, env: Env): Function {
 
 export function eval_function_call(fn: FunctionCall, env: Env): any{
     
-    const args  : Expr[] = [];
+    const args  : any[] = [];
     for (const arg of fn.args){
         args.push(eval_val(arg, env))
     } 
     const func = env.lookup(fn.callee)
-    if (func.type !== "Function"){
+    if (func.type !== "function"){
         throw new Error ("Function not retrieved man")
     }
     const exec_env = new Env(func.declarationENV)
     for (let i = 0; i < func.parameters.length; i++){
-        env.define(func.parameters[i], args[i]);
+        exec_env.define(func.parameters[i], args[i]);
     }
     let last : any = undefined;
     for (const stmt of func.body){
@@ -115,14 +115,12 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
 
 export function eval_expr(expr: Expr, env: Env):number {
 
-   if (expr.kind == "ExprStmt"){
-      return eval_expr(expr, env)
-   }
+   
     if (expr.kind === "Number"){
         return expr.value
     }
     
-    if (expr.kind === "Identifier") {
+    if (expr.kind === "identifier") {
         const ident = expr as any
        return env.lookup(ident.value)
     }
