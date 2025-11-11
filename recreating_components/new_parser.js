@@ -114,7 +114,7 @@ var Parsing = /** @class */ (function () {
                 case new_lexer_1.AllTokens.Colon:
                     this.eat();
                     var val = this.parse_primary_expr();
-                    properties.push({ key: key, val: val });
+                    properties.push({ key: key, value: val });
                     break;
                 case new_lexer_1.AllTokens.Comma:
                     this.eat();

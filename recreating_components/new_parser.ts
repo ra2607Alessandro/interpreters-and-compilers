@@ -192,7 +192,7 @@ export class Parsing {
             case AllTokens.Colon:
                 this.eat();
                 const val = this.parse_primary_expr()
-                properties.push({key, val})
+                properties.push({key, value: val})
                 break
             case AllTokens.Comma:
                 this.eat()

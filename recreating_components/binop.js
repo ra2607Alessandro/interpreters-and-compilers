@@ -79,8 +79,8 @@ function eval_function_call(fn, env) {
         throw new Error("Function not retrieved man");
     }
     var exec_env = new env_1.Env(func.declarationENV);
-    for (var i = 0; i < func.parameters.length; i++) {
-        exec_env.define(func.parameters[i], args[i]);
+    for (var i = 0; i < func.params.length; i++) {
+        exec_env.define(func.params[i], args[i]);
     }
     var last = undefined;
     for (var _b = 0, _c = func.body; _b < _c.length; _b++) {
@@ -90,6 +90,9 @@ function eval_function_call(fn, env) {
     return last;
 }
 function eval_expr(expr, env) {
+    if (expr.kind == "ExpressionStatement") {
+        return eval_expr(expr.expression, env);
+    }
     if (expr.kind === "Number") {
         return expr.value;
     }

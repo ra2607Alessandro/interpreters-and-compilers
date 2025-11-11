@@ -102,8 +102,8 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
         throw new Error ("Function not retrieved man")
     }
     const exec_env = new Env(func.declarationENV)
-    for (let i = 0; i < func.parameters.length; i++){
-        exec_env.define(func.parameters[i], args[i]);
+    for (let i = 0; i < func.params.length; i++){
+        exec_env.define(func.params[i], args[i]);
     }
     let last : any = undefined;
     for (const stmt of func.body){
@@ -115,7 +115,10 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
 
 export function eval_expr(expr: Expr, env: Env):number {
 
-   
+   if ( expr.kind=="ExpressionStatement" ){
+    return eval_expr(expr.expression, env)
+   }
+
     if (expr.kind === "Number"){
         return expr.value
     }
