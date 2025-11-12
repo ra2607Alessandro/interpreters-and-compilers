@@ -14,7 +14,8 @@ export type Expr =
 
 export type Object = {kind: "Object", properties: [string, any]}
 
-export type Function = {type: "Function", name: string, params: string[], body: Statement[], declarationEnv: Env}
+export type Function = 
+                       | {type: "Function", name: string, params: string[], body: Statement[], declarationEnv: Env}
                        | {type: "Native-Function", call: any}
 
 export function evaluate(program: Program, env: Env): any {
@@ -48,6 +49,10 @@ export function eval_stmt(stmt: Statement, env: Env):any {
         } 
         env.define(fn.ident, fn_dec)
         return fn_dec
+    }
+    if (stmt.kind === "Native-Function"){
+         const ntv_fn = stmt as FunctionCall
+         return eval_function_call(ntv_fn, env)
     }
     if (stmt.kind === "FunctionCall"){
        return eval_function_call(stmt as FunctionCall, env)
@@ -100,9 +105,14 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
         args.push(eval_val(arg, env))
     } 
     const func = env.lookup(fn.callee)
-    if (func.type !== "function"){
-        throw new Error ("Function not retrieved man")
+    if (func.type == "Native-Function") {
+        let last : any = undefined
+       for (const stmt of func.body){
+        last = eval_stmt(stmt, env)
+       }
+       return last
     }
+    if (func.type === "function" ){
     const exec_env = new Env(func.declarationENV)
     for (let i = 0; i < func.params.length; i++){
         exec_env.define(func.params[i], args[i]);
@@ -112,6 +122,9 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
         last = eval_stmt(stmt, exec_env)
     }
     return last
+    } 
+    
+    throw new Error("The type is not acceptable")
 }
 
 
@@ -160,8 +173,7 @@ export function eval_expr(expr: any, env: Env):number {
 }
 
 export function make_NTV_fn(fn: FunctionCall): Function {
-    return {type:"Native-Function", call: fn} as Function
-              
+    return {type:"Native-Function", call: fn} as Function;         
 }
 
 
