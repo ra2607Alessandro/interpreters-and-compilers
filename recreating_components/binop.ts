@@ -15,6 +15,7 @@ export type Expr =
 export type Object = {kind: "Object", properties: [string, any]}
 
 export type Function = {type: "Function", name: string, params: string[], body: Statement[], declarationEnv: Env}
+                       | {type: "Native-Function", call: any}
 
 export function evaluate(program: Program, env: Env): any {
     let last_result  = undefined ;
@@ -42,7 +43,8 @@ export function eval_stmt(stmt: Statement, env: Env):any {
             type: "function",
             ident: fn.ident,
             params: fn.params,
-            body: fn.body
+            body: fn.body,
+            declarationEnv: env
         } 
         env.define(fn.ident, fn_dec)
         return fn_dec
@@ -157,7 +159,10 @@ export function eval_expr(expr: any, env: Env):number {
     }
 }
 
-
+export function make_NTV_fn(fn: FunctionCall): Function {
+    return {type:"Native-Function", call: fn} as Function
+              
+}
 
 
 
