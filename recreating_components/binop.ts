@@ -50,10 +50,6 @@ export function eval_stmt(stmt: Statement, env: Env):any {
         env.define(fn.ident, fn_dec)
         return fn_dec
     }
-    if (stmt.kind === "Native-Function"){
-         const ntv_fn = stmt as FunctionCall
-         return eval_function_call(ntv_fn, env)
-    }
     if (stmt.kind === "FunctionCall"){
        return eval_function_call(stmt as FunctionCall, env)
     }
@@ -105,12 +101,8 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
         args.push(eval_val(arg, env))
     } 
     const func = env.lookup(fn.callee)
-    if (func.type == "Native-Function") {
-        let last : any = undefined
-       for (const stmt of func.body){
-        last = eval_stmt(stmt, env)
-       }
-       return last
+    if (func.type === "Native-Function") {
+        return func.call(args)
     }
     if (func.type === "function" ){
     const exec_env = new Env(func.declarationENV)
