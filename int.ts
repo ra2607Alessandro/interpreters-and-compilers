@@ -8,7 +8,7 @@ const env = new Env();
 const printFN = (args: any[]) => {
     console.log(...args)
     return null
-}
+} 
 env.define("print", make_NTV_fn(printFN))
 const src = fs.readFileSync("./test.txt", "utf-8")
 

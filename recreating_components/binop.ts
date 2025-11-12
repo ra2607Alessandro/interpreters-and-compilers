@@ -16,7 +16,7 @@ export type Object = {kind: "Object", properties: [string, any]}
 
 export type Function = 
                        | {type: "Function", name: string, params: string[], body: Statement[], declarationEnv: Env}
-                       | {type: "Native-Function", call: Map<any[], Env>}
+                       | {type: "Native-Function", call: Set<any[]>}
 
 export function evaluate(program: Program, env: Env): any {
     let last_result  = undefined ;
@@ -164,8 +164,9 @@ export function eval_expr(expr: any, env: Env):number {
     }
 }
 
-export function make_NTV_fn(fn: FunctionCall): Function {
-    return {type:"Native-Function", call: new Map().set(fn.args, Env)} as Function;         
+export function make_NTV_fn(fn: (args: any[]) => any): Function {
+    const set = new Set<any>()
+    return {type:"Native-Function", call: set.add(fn) } as Function;         
 }
 
 
