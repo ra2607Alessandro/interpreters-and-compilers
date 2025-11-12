@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var binop_1 = require("./recreating_components/binop");
+var env_1 = require("./recreating_components/env");
+var new_parser_1 = require("./recreating_components/new_parser");
+var fs = require("fs");
+var parser = new new_parser_1.Parsing();
+var env = new env_1.Env();
+var printFN = function (args) {
+    console.log.apply(console, args);
+    return null;
+};
+env.define("print", (0, binop_1.make_NTV_fn)(printFN));
+var src = fs.readFileSync("./test.txt", "utf-8");
+var ast = parser.ProduceAST(src);
+console.log(JSON.stringify(ast, null, 2));
+var evaluation = (0, binop_1.evaluate)(ast, env);
+console.log(evaluation);

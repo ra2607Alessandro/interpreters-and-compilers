@@ -102,7 +102,15 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
     } 
     const func = env.lookup(fn.callee)
     if (func.type === "Native-Function") {
-        return func.call(args)
+        const ntv_fn = func.call
+        if (ntv_fn.has(args))
+        {
+            return args
+        }
+        else {
+            return false
+        }
+
     }
     if (func.type === "function" ){
     const exec_env = new Env(func.declarationENV)
@@ -165,7 +173,7 @@ export function eval_expr(expr: any, env: Env):number {
 }
 
 export function make_NTV_fn(fn: (args: any[]) => any): Function {
-    const set = new Set<any>()
+    const set = new Set<any>();
     return {type:"Native-Function", call: set.add(fn) } as Function;         
 }
 
