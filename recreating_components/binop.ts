@@ -16,7 +16,7 @@ export type Object = {kind: "Object", properties: [string, any]}
 
 export type Function = 
                        | {type: "Function", name: string, params: string[], body: Statement[], declarationEnv: Env}
-                       | {type: "Native-Function", call: Set<any[]>}
+                       | {type: "Native-Function", call: (args: any[]) => any}
 
 export function evaluate(program: Program, env: Env): any {
     let last_result  = undefined ;
@@ -103,14 +103,7 @@ export function eval_function_call(fn: FunctionCall, env: Env): any{
     const func = env.lookup(fn.callee)
     if (func.type === "Native-Function") {
         const ntv_fn = func.call
-        if (ntv_fn.has(args))
-        {
-            return args
-        }
-        else {
-            return false
-        }
-
+        return ntv_fn(args)
     }
     if (func.type === "function" ){
     const exec_env = new Env(func.declarationENV)
@@ -173,8 +166,8 @@ export function eval_expr(expr: any, env: Env):number {
 }
 
 export function make_NTV_fn(fn: (args: any[]) => any): Function {
-    const set = new Set<any>();
-    return {type:"Native-Function", call: set.add(fn) } as Function;         
+    
+    return {type:"Native-Function", call: fn } as Function;         
 }
 
 

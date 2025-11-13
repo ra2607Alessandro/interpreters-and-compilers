@@ -95,7 +95,7 @@ export default class Parser {
 
         this.expect( 
           TokenType.Equals,
-          "Bro wtf? put an '='. I'm lowkey tired of you vibe coders"
+          `Bro wtf? put an '=' ${this.at()}. I'm lowkey tired of you vibe coders`
         )
          return {
           kind: "VariableDeclare", 

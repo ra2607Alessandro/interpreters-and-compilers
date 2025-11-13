@@ -1,1 +1,4 @@
-print(43)
+const ins1 = {x: 40, y: 32, z: 16}
+const ins2 = {x= 10, y: 87 ,z: y - x - 45}
+const sum = ins1.x + ins2.z
+print(sum)

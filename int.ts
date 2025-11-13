@@ -6,9 +6,13 @@ import fs = require('fs');
 const parser = new Parsing();
 const env = new Env();
 const printFN = (args: any[]) => {
-    console.log(...args)
-    return null
-} 
+    if(args){
+        console.log(...args)
+    }
+    else {
+        return null
+    }
+}
 env.define("print", make_NTV_fn(printFN))
 const src = fs.readFileSync("./test.txt", "utf-8")
 

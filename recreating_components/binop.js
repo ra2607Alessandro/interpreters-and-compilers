@@ -79,12 +79,7 @@ function eval_function_call(fn, env) {
     var func = env.lookup(fn.callee);
     if (func.type === "Native-Function") {
         var ntv_fn = func.call;
-        if (ntv_fn.has(args)) {
-            return args;
-        }
-        else {
-            return false;
-        }
+        return ntv_fn(args);
     }
     if (func.type === "function") {
         var exec_env = new env_1.Env(func.declarationENV);
@@ -136,6 +131,5 @@ function eval_expr(expr, env) {
     }
 }
 function make_NTV_fn(fn) {
-    var set = new Set();
-    return { type: "Native-Function", call: set.add(fn) };
+    return { type: "Native-Function", call: fn };
 }
