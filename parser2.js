@@ -56,7 +56,7 @@ var Parser = /** @class */ (function () {
         var isCostant = this.at().type == lexer_1.TokenType.Const;
         this.eat();
         var identifier = this.expect(lexer_1.TokenType.Identifier, "Bro, you need to put in an identifier man!").value;
-        this.expect(lexer_1.TokenType.Equals, "Bro wtf? put an '=' ".concat(this.at(), ". I'm lowkey tired of you vibe coders"));
+        this.expect(lexer_1.TokenType.Equals, "Bro wtf? put an '=' ".concat(console.log(this.at()), ". I'm lowkey tired of you vibe coders"));
         return {
             kind: "VariableDeclare",
             identifier: identifier,
