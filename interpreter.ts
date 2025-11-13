@@ -1,9 +1,10 @@
 import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction } from "./value";
-import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, Expr, ExpressionStatement, ForLoop, FunctionDeclare, Identifier, IfStatement, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, StringLiteral, VariableDeclare, WhileStatement } from "./ast";
+import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, Expr, ExpressionStatement, ForLoop, FunctionDeclare, Identifier, IfStatement, Member, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, StringLiteral, VariableDeclare, WhileStatement } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
 import { constants } from "buffer";
 import { argv } from "process";
+import { eval_expr } from "./recreating_components/binop";
 
 function eval_program(program: Program, env: Environment):RuntimeVal {
     let last_astNode : RuntimeVal = {
@@ -96,7 +97,6 @@ function eval_object(obj: ObjectLiteral, env: Environment): RuntimeVal {
 
     const object = { type: "object", properties: new Map() } as ObjectValue;
   
-
     for (const { key, value } of obj.properties){
     
     const runtimeVal = (value == undefined) ? env.LooksUp(key) : evaluate(value, env);      
@@ -105,6 +105,37 @@ function eval_object(obj: ObjectLiteral, env: Environment): RuntimeVal {
     return object
 
 }
+
+function  eval_member_expr(obj: Member, env: Environment):RuntimeVal{
+         const object = evaluate(obj.object, env) as ObjectValue ;
+
+       if (object.type == "object" && object.properties) {
+         let property_access : any  = undefined 
+         if (obj.isComputed = true){
+            property_access = evaluate(obj.property as Property, env) 
+         }
+         if (obj.property){
+            property_access = (obj.property as Property).key
+         }
+        if (property_access !== undefined){
+        let key : string = ""
+        const value = object.properties.get(key)
+        if (value!){
+        return value
+        }
+        else {
+            throw new Error(`the value ${value} is undefined, it's impossible evaluate it`)
+        }
+    }
+       else {
+        throw new Error("No, this cannot be accepted")
+       } 
+    }
+   
+    throw new Error ("Property has to be an Object in order to have a Member")
+}
+
+
 
 function evaluate_call_expr(call: CallExpr, env: Environment): RuntimeVal {
 
@@ -239,6 +270,8 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
             return eval_assignments_expr(astNode as AssignmentExpr, env);
         case "ObjectLiteral":
             return eval_object(astNode as ObjectLiteral, env);
+        case "Member":
+            return eval_member_expr(astNode as Member, env)
         case "FunctionDeclare":
             return eval_declare_fn((astNode as FunctionDeclare), env)
         case "CallExpr":
@@ -254,7 +287,7 @@ export function evaluate(astNode: Stat, env: Environment): RuntimeVal {
         case "StringLiteral":
             return {type: "string", value: (astNode as StringLiteral).value} as RuntimeVal
             default:
-            throw new Error(`This AST Node has not yet been setup for interpretation, ${astNode}`)
+            throw new Error(`This AST Node has not yet been setup for interpretation, ${astNode}${console.log(astNode)}`)
 
     }
 }
