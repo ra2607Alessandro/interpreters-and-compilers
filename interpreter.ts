@@ -107,13 +107,6 @@ function eval_object(obj: ObjectLiteral, env: Environment): RuntimeVal {
 }
 
 function  eval_member_expr(obj: Member, env: Environment):RuntimeVal{
-     if (!obj.object ){
-        throw ("The member has no object ")
-     }
-     if (!obj.property){
-        throw ("The member has no property")
-     }
-    
     const object = evaluate(obj.object, env) as ObjectValue ;
 
     if (object.type !== "object" || !object.properties){
