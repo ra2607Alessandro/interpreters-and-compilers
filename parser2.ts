@@ -408,13 +408,14 @@ export default class Parser {
 
   }
 
-  private parse_member_expr(): Member {
+  private parse_member_expr(): Expr {
     let obj = this.parse_primary_expr();
 
     while (this.at()!.type == TokenType.Dot || this.at()!.type == TokenType.OpenSquare) {
       let operator = this.eat();
       let property : Expr ;
       let isComputed : boolean 
+      let object = obj
 
       if (operator.type == TokenType.Dot) {
         isComputed = false;
@@ -430,9 +431,14 @@ export default class Parser {
         }
       
     
-      obj = { kind : "Member", isComputed,  property} as Member
+      return { 
+        kind : "Member", 
+        object: object , 
+        isComputed: isComputed, 
+        property:  property
+       } as Member
       }
-    return obj as Member
+    return obj 
   
   }
   // Orders Of Precedence
