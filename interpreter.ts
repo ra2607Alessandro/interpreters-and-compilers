@@ -132,6 +132,7 @@ function  eval_member_expr(obj: Member, env: Environment):RuntimeVal{
     else {
         throw (`the key has doesn't have any symbol`)
     }
+    
     const value = object.properties.get(key);
     if (value !== undefined) {
         return value;

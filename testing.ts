@@ -5,7 +5,7 @@ import fs = require('fs');
 import { Stat, MK_PROGRAM } from "./ast";
 import { MK_NTV_FUNCTION } from "./value";
 
-const src = fs.readFileSync("./programI.txt", "utf-8")
+const src = fs.readFileSync("./programII.txt", "utf-8")
 
 const env = new Environment();
 env.declareVar("print", MK_NTV_FUNCTION((args, scope) => {
