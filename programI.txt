@@ -1,0 +1,4 @@
+const insI = {x: 40, y: 32, z: 16}
+const insII = {x: 10, y: 87 ,z: insI.x - insI.y - 4}
+const sum = insI.x + insII.z
+print(sum)

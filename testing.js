@@ -5,7 +5,7 @@ var parser2_1 = require("./parser2");
 var interpreter_1 = require("./interpreter");
 var fs = require("fs");
 var value_1 = require("./value");
-var src = fs.readFileSync("./test.txt", "utf-8");
+var src = fs.readFileSync("./programI.txt", "utf-8");
 var env = new environment_1.Environment();
 env.declareVar("print", (0, value_1.MK_NTV_FUNCTION)(function (args, scope) {
     if (args[0]) {

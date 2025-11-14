@@ -1,4 +1,0 @@
-const insI = {x: 40, y: 32, z: 16}
-const insII = {x: 10, y: 87 ,z: insII.y - insII.x - 45}
-const sum = insI.x + insII.x
-print(sum)

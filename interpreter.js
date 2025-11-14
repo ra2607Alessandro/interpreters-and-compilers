@@ -90,8 +90,11 @@ function eval_object(obj, env) {
     return object;
 }
 function eval_member_expr(obj, env) {
-    if (obj.kind !== "Member") {
-        throw new Error("Bro it has to be a Member");
+    if (!obj.object) {
+        throw ("The member has no object ");
+    }
+    if (!obj.property) {
+        throw ("The member has no property");
     }
     var object = evaluate(obj.object, env);
     if (object.type !== "object" || !object.properties) {

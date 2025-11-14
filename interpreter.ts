@@ -107,7 +107,14 @@ function eval_object(obj: ObjectLiteral, env: Environment): RuntimeVal {
 }
 
 function  eval_member_expr(obj: Member, env: Environment):RuntimeVal{
-         const object = evaluate(obj.object, env) as ObjectValue ;
+     if (!obj.object ){
+        throw ("The member has no object ")
+     }
+     if (!obj.property){
+        throw ("The member has no property")
+     }
+    
+    const object = evaluate(obj.object, env) as ObjectValue ;
 
     if (object.type !== "object" || !object.properties){
         throw new Error (`the evaluated part ${object} is not acceptable`)
