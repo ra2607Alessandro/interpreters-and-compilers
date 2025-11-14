@@ -90,30 +90,39 @@ function eval_object(obj, env) {
     return object;
 }
 function eval_member_expr(obj, env) {
+    if (obj.kind !== "Member") {
+        throw new Error("Bro it has to be a Member");
+    }
     var object = evaluate(obj.object, env);
-    if (object.type == "object" && object.properties) {
-        var property_access = undefined;
-        if (obj.isComputed = true) {
-            property_access = evaluate(obj.property, env);
+    if (object.type !== "object" || !object.properties) {
+        throw new Error("the evaluated part ".concat(object, " is not acceptable"));
+    }
+    var key;
+    if (obj.isComputed == true) {
+        var propVal = evaluate(obj.property, env);
+        if (propVal.type == "string") {
+            key = propVal.value;
         }
-        if (obj.property) {
-            property_access = obj.property.key;
-        }
-        if (property_access !== undefined) {
-            var key = "";
-            var value = object.properties.get(key);
-            if (value) {
-                return value;
-            }
-            else {
-                throw new Error("the value ".concat(value, " is undefined, it's impossible evaluate it"));
-            }
+        else if (propVal.type == "number") {
+            key = String(propVal.value);
         }
         else {
-            throw new Error("No, this cannot be accepted");
+            throw ("Computed value is not acceptable, it has to be either a number or a string");
         }
     }
-    throw new Error("Property has to be an Object in order to have a Member");
+    else if (obj.property) {
+        key = obj.property.symbol;
+    }
+    else {
+        throw ("the key has doesn't have any symbol");
+    }
+    var value = object.properties.get(key);
+    if (value !== undefined) {
+        return value;
+    }
+    else {
+        throw new Error("Property '".concat(key, "' does not exist on object"));
+    }
 }
 function evaluate_call_expr(call, env) {
     var args = call.arg.map(function (argv) { return evaluate(argv, env); });
