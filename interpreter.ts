@@ -109,30 +109,35 @@ function eval_object(obj: ObjectLiteral, env: Environment): RuntimeVal {
 function  eval_member_expr(obj: Member, env: Environment):RuntimeVal{
          const object = evaluate(obj.object, env) as ObjectValue ;
 
-       if (object.type == "object" && object.properties) {
-         let property_access : any  = undefined 
-         if (obj.isComputed = true){
-            property_access = evaluate(obj.property as Property, env) 
-         }
-         if (obj.property){
-            property_access = (obj.property as Property).key
-         }
-        if (property_access !== undefined){
-        let key : string = ""
-        const value = object.properties.get(key)
-        if (value!){
-        return value
-        }
-        else {
-            throw new Error(`the value ${value} is undefined, it's impossible evaluate it`)
-        }
+    if (object.type !== "object" || !object.properties){
+        throw new Error (`the evaluated part ${object} is not acceptable`)
     }
-       else {
-        throw new Error("No, this cannot be accepted")
-       } 
+
+    let key : string;
+     if (obj.isComputed == true){
+        const propVal = evaluate(obj.property, env) 
+        if (propVal.type == "string"){
+            key = (propVal as IdentValue).value
+        }
+        else if(propVal.type == "number"){
+           key = String((propVal as NumValue).value)
+        }
+        else { throw (`Computed value is not acceptable, it has to be either a number or a string`)
+        }
+     }
+    else if(obj.property){
+        key = (obj.property as Identifier).symbol
+     }
+    
+    else {
+        throw (`the key has doesn't have any symbol`)
     }
-   
-    throw new Error ("Property has to be an Object in order to have a Member")
+    const value = object.properties.get(key);
+    if (value !== undefined) {
+        return value;
+    } else {
+        throw new Error(`Property '${key}' does not exist on object`);
+    }
 }
 
 
