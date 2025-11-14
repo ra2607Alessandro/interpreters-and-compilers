@@ -408,7 +408,7 @@ export default class Parser {
 
   }
 
-  private parse_member_expr(): Expr {
+  private parse_member_expr(): Member {
     let obj = this.parse_primary_expr();
 
     while (this.at()!.type == TokenType.Dot || this.at()!.type == TokenType.OpenSquare) {
@@ -432,7 +432,7 @@ export default class Parser {
     
       obj = { kind : "Member", isComputed,  property} as Member
       }
-    return obj 
+    return obj as Member
   
   }
   // Orders Of Precedence
