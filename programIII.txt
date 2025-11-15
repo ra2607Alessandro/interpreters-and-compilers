@@ -1,0 +1,15 @@
+function interest(amount, perc, years){
+    let year = (amount * perc ) + amount
+    let tot = years 
+    while (tot => 0 ){
+       tot = tot - 1
+       year = (year* perc) + year
+       if (tot = 0){
+        print(year)
+       }
+    }
+    
+}
+
+const int = interest(100, 10/100, 3)
+print(int)

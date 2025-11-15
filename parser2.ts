@@ -185,7 +185,9 @@ export default class Parser {
     let init : VariableDeclare | Expr;
     if (this.at()!.type == TokenType.Let || this.at()!.type == TokenType.Const ){
        init = this.parse_declaration()  
-    }else {
+    }
+    else 
+    {
     init = this.parse_expr();}
     this.expect(TokenType.Comma, "',' is expected");
     const cond = this.parse_expr();
@@ -303,7 +305,7 @@ export default class Parser {
 
   // Handle expressions
  private parse_comparison_sign(): Expr {
-  const first = this.parse_object()
+  const first = this.parse_additive_expr()
 
   if (
     this.at()!.type == TokenType.EqualsEquals ||
@@ -481,6 +483,12 @@ export default class Parser {
           kind: "StringLiteral", 
           value: this.eat()!.value
         } as StringLiteral
+
+      case TokenType.OpenBrace:
+        this.eat();
+        const inside = this.parse_stmt(); 
+        this.expect( TokenType.CloseBrace, "You need to close the brace once you open it bro");
+        return inside
         
       // Grouping Expressions
       case TokenType.Openparen: {
@@ -491,6 +499,10 @@ export default class Parser {
           "Unexpected token found inside parenthesised expression. Expected closing parenthesis.",
         ); // closing paren
         return value;
+      
+      
+
+
       }
       
      

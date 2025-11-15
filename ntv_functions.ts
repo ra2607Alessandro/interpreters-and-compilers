@@ -2,11 +2,13 @@ import { Environment } from "./environment";
 import { FunctionCall } from "./value";
 
 export function print(args: any[], env: Environment){
+    let result : any
     if(args){
-        console.log(...args)
+       result = console.log(...args)
     }
     else {
-        return {type: "null", value: null}
+        result = {type: "null", value: null}
     }
+    return result
 
 }
