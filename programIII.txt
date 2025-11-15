@@ -3,7 +3,7 @@ function interest(amount, perc, years){
     let tot = years 
     while (tot => 0 ){
        tot = tot - 1
-       year = (year* perc) + year
+       year = (year * perc) + year
        if (tot = 0){
         print(year)
        }

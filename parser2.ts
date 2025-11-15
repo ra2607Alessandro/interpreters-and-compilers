@@ -305,7 +305,7 @@ export default class Parser {
 
   // Handle expressions
  private parse_comparison_sign(): Expr {
-  const first = this.parse_additive_expr()
+  const first = this.parse_consequence() as Object
 
   if (
     this.at()!.type == TokenType.EqualsEquals ||
@@ -316,7 +316,7 @@ export default class Parser {
   ) 
   { const op = this.eat()
     const val = this.parse_object()
-    return {kind: "BinaryExpr", left: first, right: val, operator: op.value } as BinaryExpr
+    return {kind: "BinaryExpr", left: first as Expr, right: val, operator: op.value } as BinaryExpr
   }
   return first
  }
@@ -484,11 +484,7 @@ export default class Parser {
           value: this.eat()!.value
         } as StringLiteral
 
-      case TokenType.OpenBrace:
-        this.eat();
-        const inside = this.parse_stmt(); 
-        this.expect( TokenType.CloseBrace, "You need to close the brace once you open it bro");
-        return inside
+     
         
       // Grouping Expressions
       case TokenType.Openparen: {
