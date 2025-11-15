@@ -3,18 +3,15 @@ import Parser from "./parser2"
 import { evaluate } from "./interpreter";
 import fs = require('fs');
 import { Stat, MK_PROGRAM } from "./ast";
-import { MK_NTV_FUNCTION } from "./value";
+import { FunctionCall, MK_NTV_FUNCTION } from "./value";
+import {print} from "./ntv_functions"
 
 const src = fs.readFileSync("./programII.txt", "utf-8")
 
 const env = new Environment();
-env.declareVar("print", MK_NTV_FUNCTION((args, scope) => {
-    if (args[0]) {
-       console.log(args[0])
-       return {type: args[0].type}
-    }
-    return {type: "null", value: null}
-}), true)
+
+
+env.declareVar("print", MK_NTV_FUNCTION(print as FunctionCall),true )
 const parser = new Parser(); 
 const ast = parser.produceAST(src)
 const result = evaluate(ast , env)
