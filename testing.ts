@@ -10,13 +10,10 @@ const src = fs.readFileSync("./programII.txt", "utf-8")
 
 const env = new Environment();
 
-
 env.declareVar("print", MK_NTV_FUNCTION(print as FunctionCall),true )
 const parser = new Parser(); 
 const ast = parser.produceAST(src)
 const result = evaluate(ast , env)
-
-
 
 console.log(result)
 

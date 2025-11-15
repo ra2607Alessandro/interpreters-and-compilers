@@ -102,11 +102,13 @@ export function tokenize(sourceCode: string): Token[]{
     else if (src[0] == ":") {
         tokens.push(token(src.shift()!, TokenType.Colon));
     }
-    else if (src[0] == "==") {
-       tokens.push(token(src.shift()!, TokenType.EqualsEquals))
+    else if (src[0] == "=" && src[1] == "=") {
+        src.shift(); src.shift()
+       tokens.push(token("!=", TokenType.EqualsEquals))
     }
-    else if (src[0] == "!=") {
-       tokens.push(token(src.shift()!, TokenType.NotEquals))
+    else if (src[0] == "!" && src[1] == "=") {
+        src.shift(); src.shift()
+       tokens.push(token("!=", TokenType.NotEquals))
     }
     else if (src[0] == "<") {
        tokens.push(token(src.shift()!, TokenType.LessThan))
@@ -114,11 +116,13 @@ export function tokenize(sourceCode: string): Token[]{
     else if (src[0] == ">") {
        tokens.push(token(src.shift()!, TokenType.GreaterThan))
     }
-    else if (src[0] == "<=") {
-       tokens.push(token(src.shift()!, TokenType.LessOrEqual))
+    else if (src[0] == "<" && src[1] == "=") {
+        src.shift(); src.shift()
+       tokens.push(token("<=", TokenType.LessOrEqual))
     }
-    else if (src[0] == "=>") {
-       tokens.push(token(src.shift()!, TokenType.GreaterOrEqual))
+    else if (src[0] == "=" && src[1] == ">") {
+        src.shift(); src.shift()
+       tokens.push(token("=>", TokenType.NotEquals))
     }
     else if (src[0] == ".") {
        tokens.push(token(src.shift()!, TokenType.Dot))

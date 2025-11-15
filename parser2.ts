@@ -492,6 +492,7 @@ export default class Parser {
         ); // closing paren
         return value;
       }
+      
      
       // Unidentified Tokens and Invalid Code Reached
       default:

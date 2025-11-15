@@ -1,7 +1,8 @@
+
 const key = 15
 let val = 0
 
-while (key > val){
+while (key => val){
     val = val + 1
     if (key < val){
         print("Val has beaten key bro")
