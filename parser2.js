@@ -65,7 +65,7 @@ var Parser = /** @class */ (function () {
         };
     };
     Parser.prototype.parse_fn_declaration = function () {
-        var fn = this.eat();
+        this.eat();
         var name = this.expect(lexer_1.TokenType.Identifier, "Function has to have a name declared").value;
         var args = this.parse_args();
         var params = [];

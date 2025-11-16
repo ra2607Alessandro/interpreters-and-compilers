@@ -13,6 +13,7 @@ export class Environment {
         this.constants = new Set()
         
     } 
+    
 
     public declareVar(varname: string, value: RuntimeVal, constant: boolean): RuntimeVal {
         if (this.variables.has(varname)) {

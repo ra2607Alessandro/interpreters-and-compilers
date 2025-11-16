@@ -108,7 +108,7 @@ export default class Parser {
 
 
   private parse_fn_declaration(): Stat {
-    const fn = this.eat();
+    this.eat();
     const name  = this.expect(TokenType.Identifier, "Function has to have a name declared").value;
     const args = this.parse_args();
 
@@ -305,7 +305,7 @@ export default class Parser {
 
   // Handle expressions
  private parse_comparison_sign(): Expr {
-  const first = this.parse_consequence() as Object
+  const first = this.parse_additive_expr()
 
   if (
     this.at()!.type == TokenType.EqualsEquals ||
