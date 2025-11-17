@@ -197,7 +197,9 @@ function evaluate_consequence(stmts: Stat[], env: Environment): RuntimeVal{
 function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
     const cond = evaluate(stmt.condition, env)
     if (cond.type !== "boolean"){
+        console.log(stmt.condition)
         throw new Error ("The condition of an if statement must be of boolean type")
+        
     }
 
     const condintion = (cond as BooleanVal).value

@@ -1,5 +1,4 @@
 fn coin(choice, bet){
-    for (const i = bet){
        if(choice == "cross"){
         if(i%2 == 0){
             print("You won")
@@ -25,9 +24,9 @@ fn coin(choice, bet){
 
        else {
         print("A coin either has a had or a cross bro")
-       } 
+       }
 
-    }
+    
 
 }
 
