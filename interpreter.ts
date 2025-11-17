@@ -31,6 +31,9 @@ function eval_numeric_binary_expr(lhs: NumValue, rhs: NumValue, operator: string
     else if (operator == "/") {
         result = lhs.value / rhs.value
     }
+    else if (operator == "%") {
+        result = lhs.value % rhs.value
+    }
     else { 
         result= lhs.value % rhs.value
     } 
@@ -71,6 +74,16 @@ function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {
             return eval_comparison_sign(lhs as NumValue, rhs as NumValue, binop.operator)
         }
         return eval_numeric_binary_expr(lhs as NumValue,  rhs as NumValue, binop.operator)
+    }
+    if (lhs.type == "string" && rhs.type == "string"){
+        let result : any
+        if (binop.operator == "==" ){
+            result = lhs === rhs
+        }
+        if ( binop.operator == "!=" ){
+            result = lhs !== rhs
+        }
+        return MK_BOOL(result)
     }
 
     return {value: null, type: "null"} as NullValue
