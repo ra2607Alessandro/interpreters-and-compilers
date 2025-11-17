@@ -1,9 +1,9 @@
 fn coin(choice, bet){
        if(choice == "cross"){
-        if(i%2 == 0){
+        if(bet%2 == 0){
             print("You won")
         }
-        if(i%5==0){
+        if(bet%5==0){
             print("You won")
         }
         else{
@@ -11,10 +11,10 @@ fn coin(choice, bet){
         }
        }
        if(choice == "head"){
-        if(i%4== 0){
+        if(bet%4== 0){
             print("You won")
         }
-        if(i%7==0) {
+        if(bet%7==0) {
             print("You won")
         }
         else {
