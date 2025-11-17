@@ -22,6 +22,7 @@ export interface IfStatement {
     kind: "IfStatement",
     condition: Expr,
     consequence: Stat[],
+    elif?: [Expr,Stat[]],
     else?: ElseStamement
 
 }

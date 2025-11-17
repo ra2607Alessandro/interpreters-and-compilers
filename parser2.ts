@@ -212,24 +212,39 @@ export default class Parser {
   
   private parse_if_stat(): IfStatement{
     this.eat();
-    this.expect(TokenType.Openparen, "Condiotion has to be contained inside a parenthesis")
+    this.expect(TokenType.Openparen, "Condition has to be contained inside a parenthesis")
     const expr = this.parse_expr();
     this.expect(TokenType.Closeparen, "You need to close the parenthesis bro.")
     this.expect(TokenType.OpenBrace, "Consequence has to contained inside curly brackets")
     const consequence = this.parse_consequence()
     this.expect(TokenType.CloseBrace, "You forgot to close the parenthesis")
+    const ELIF = this.at()
+    let elif : any = null
+    if(ELIF?.type == TokenType.ELIF){
+      this.expect(TokenType.Openparen, "Condition has to be contained inside a parenthesis")
+      const expr = this.parse_expr()
+      this.expect(TokenType.Closeparen, "You need to close the parenthesis bro.")
+      this.expect(TokenType.OpenBrace, "Consequence has to contained inside curly brackets")
+      const consequence = this.parse_consequence()
+      this.expect(TokenType.CloseBrace, "You forgot to close the parenthesis")
+      elif = {expr,consequence}
+    }
     const ELSE =this.at()
     if (ELSE!.type === TokenType.ELSE)
-    { const else_stat = this.parse_else_stat()
+    { 
+    const else_stat = this.parse_else_stat()
       return {kind: "IfStatement",
        condition: expr,
-       consequence: consequence, else: else_stat} as IfStatement
+       consequence: consequence, 
+       elif: elif,
+       else: else_stat} as IfStatement
      }
      else {
     return {
       kind: "IfStatement",
        condition: expr,
-       consequence: consequence
+       consequence: consequence,
+       elif: elif
        } as IfStatement
       }
   }

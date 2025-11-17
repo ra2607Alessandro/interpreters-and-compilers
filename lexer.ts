@@ -17,6 +17,7 @@ export enum TokenType {
     FOR,
     IF,
     ELSE,
+    ELIF,
     WHILE,
     Function,
     Openparen, 
@@ -47,6 +48,7 @@ const KEYWORDS : Record<string, TokenType> = {
     "if": TokenType.IF,
     "for": TokenType.FOR,
     "else": TokenType.ELSE,
+    "elif": TokenType.ELIF,
     "while": TokenType.WHILE
 }
 
@@ -138,6 +140,9 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == "else") {
         tokens.push(token(src.shift()!, TokenType.ELSE))
+    }
+    else if (src[0] == "elif") {
+        tokens.push(token(src.shift()!, TokenType.ELIF))
     }
     else if (src[0] == "while") {
         tokens.push(token(src.shift()!, TokenType.WHILE))

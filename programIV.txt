@@ -1,33 +1,27 @@
 fn coin(choice, bet){
-       if(choice == "cross"){
-        if(bet%2 == 0){
+    if (choice == "cross") {
+        if (bet % 2 == 0) {
             print("You won")
-        }
-        if(bet%5==0){
-            print("You won")
-        }
-        else{
-            print("You lost")
-        }
-       }
-       if(choice == "head"){
-        if(bet%4== 0){
-            print("You won")
-        }
-        if(bet%7==0) {
-            print("You won")
-        }
+        } 
         else {
             print("You lost")
         }
-       }
-
-       else {
-        print("A coin either has a had or a cross bro")
-       }
-
-    
-
+    } 
+    else if (choice == "head") {
+        if (bet % 4 == 0) {
+            print("You won")
+        }
+        if (bet % 7 == 0) {
+            print("You won")
+        } 
+        else {
+            print("You lost")
+        }
+    } 
+    else {
+        print("A coin either has a head or a cross bro")
+    }
 }
 
-print(coin("head",398))
+const dumbo = coin("dumbo",8)
+print(dumbo)
