@@ -1,4 +1,4 @@
-import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction } from "./value";
+import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction, MK_RUNTIMEVAL } from "./value";
 import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, Expr, ExpressionStatement, ForLoop, FunctionDeclare, Identifier, IfStatement, Member, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, StringLiteral, VariableDeclare, WhileStatement } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
@@ -219,6 +219,12 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
     if (condintion === true) {
         const alternative = evaluate_consequence(stmt.consequence, env)
         return alternative
+    }
+
+    if(stmt.elif) {
+        const cond = evaluate(stmt.elif.condition, env)
+        const consequence = evaluate_consequence(stmt.elif.consequence, env)
+        return MK_RUNTIMEVAL({cond, consequence}) 
     }
     
     if (stmt.else) {

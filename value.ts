@@ -2,7 +2,7 @@ import { Expr, FunctionDeclare, Stat } from "./ast";
 import { Environment } from "./environment";
 
 
-export type ValueType = "null" | "number" | "string" | "boolean" | "object" | "native-function" | "user-function";
+export type ValueType = "runtime-val"|"null" | "number" | "string" | "boolean" | "object" | "native-function" | "user-function";
 
 
 export interface RuntimeVal {
@@ -51,6 +51,9 @@ export interface UserFunction extends RuntimeVal {
     declarationENV: Environment
 }
 
+export function MK_RUNTIMEVAL(b: any): RuntimeVal {
+    return {type:"runtime-val",value: b} as RuntimeVal
+}
 
 export function MK_NTV_FUNCTION(b: FunctionCall): NativeFunction {
     return {type: "native-function", call: b};

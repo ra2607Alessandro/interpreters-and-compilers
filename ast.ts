@@ -2,7 +2,7 @@ import { Token, TokenType } from "./lexer";
 import { FunctionCall } from "./value";
 
 
-export type NodeType = "BooleanLiteral" | "Identifier" | "VariableDeclare" |"Assignment Expr" |"FunctionDeclare"|"BinaryExpr"|"ForLoop" | "WhileStatement" | "StringLiteral" |"ElseStamement" |"IfStatement" | "ExpressionStatement" | "Program" | "NumericLiteral" | "NullLiteral" | "Booleant Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
+export type NodeType = "ElifStatement"|"BooleanLiteral" | "Identifier" | "VariableDeclare" |"Assignment Expr" |"FunctionDeclare"|"BinaryExpr"|"ForLoop" | "WhileStatement" | "StringLiteral" |"ElseStamement" |"IfStatement" | "ExpressionStatement" | "Program" | "NumericLiteral" | "NullLiteral" | "Booleant Expr" | "Property" | "ObjectLiteral" | "CallExpr" | "Member";
 
 export interface Stat {
     kind: NodeType
@@ -22,7 +22,7 @@ export interface IfStatement {
     kind: "IfStatement",
     condition: Expr,
     consequence: Stat[],
-    elif?: [Expr,Stat[]],
+    elif?: ElifStatement,
     else?: ElseStamement
 
 }
@@ -38,6 +38,12 @@ export interface WhileStatement {
     kind: "WhileStatement",
     condition: Expr,
     body: Stat[]
+}
+
+export interface ElifStatement {
+    kind: "ElifStatement",
+    condition: Expr,
+    consequence: Stat[]
 }
 
 export interface ElseStamement {

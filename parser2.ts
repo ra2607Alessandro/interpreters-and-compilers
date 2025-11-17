@@ -20,7 +20,8 @@ import {
   ElseStamement,
   StringLiteral,
   WhileStatement,
-  ForLoop
+  ForLoop,
+  ElifStatement
 } from "./ast";
 
 import { Token, TokenType, tokenize } from "./lexer";
@@ -219,7 +220,7 @@ export default class Parser {
     const consequence = this.parse_consequence()
     this.expect(TokenType.CloseBrace, "You forgot to close the parenthesis")
     const ELIF = this.at()
-    let elif : any = null
+    let elif : any = undefined
     if(ELIF?.type == TokenType.ELIF){
       this.expect(TokenType.Openparen, "Condition has to be contained inside a parenthesis")
       const expr = this.parse_expr()
@@ -227,7 +228,10 @@ export default class Parser {
       this.expect(TokenType.OpenBrace, "Consequence has to contained inside curly brackets")
       const consequence = this.parse_consequence()
       this.expect(TokenType.CloseBrace, "You forgot to close the parenthesis")
-      elif = {expr,consequence}
+      elif = {
+        kind: "ElifStatement",
+        condition: expr, 
+        consequence: consequence} as ElifStatement
     }
     const ELSE =this.at()
     if (ELSE!.type === TokenType.ELSE)
@@ -236,7 +240,7 @@ export default class Parser {
       return {kind: "IfStatement",
        condition: expr,
        consequence: consequence, 
-       elif: elif,
+       elif: elif!,
        else: else_stat} as IfStatement
      }
      else {
@@ -244,7 +248,7 @@ export default class Parser {
       kind: "IfStatement",
        condition: expr,
        consequence: consequence,
-       elif: elif
+       elif: elif!
        } as IfStatement
       }
   }

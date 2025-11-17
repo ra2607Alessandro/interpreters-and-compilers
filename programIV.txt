@@ -7,7 +7,7 @@ fn coin(choice, bet){
             print("You lost")
         }
     } 
-    else if (choice == "head") {
+    elif (choice == "head") {
         if (bet % 4 == 0) {
             print("You won")
         }
