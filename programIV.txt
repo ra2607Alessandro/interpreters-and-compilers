@@ -1,0 +1,34 @@
+fn coin(choice, bet){
+    for (const i = bet){
+       if(choice == "cross"){
+        if(i%2 == 0){
+            print("You won")
+        }
+        if(i%5==0){
+            print("You won")
+        }
+        else{
+            print("You lost")
+        }
+       }
+       if(choice == "head"){
+        if(i%4== 0){
+            print("You won")
+        }
+        if(i%7==0) {
+            print("You won")
+        }
+        else {
+            print("You lost")
+        }
+       }
+
+       else {
+        print("A coin either has a had or a cross bro")
+       } 
+
+    }
+
+}
+
+print(coin("head",398))
