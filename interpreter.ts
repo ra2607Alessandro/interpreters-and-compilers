@@ -78,7 +78,7 @@ function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {
     if (lhs.type == "string" && rhs.type == "string"){
         let result : any
         if (binop.operator == "==" ){
-            result = lhs === rhs
+            result = lhs == rhs
         }
         if ( binop.operator == "!=" ){
             result = lhs !== rhs
