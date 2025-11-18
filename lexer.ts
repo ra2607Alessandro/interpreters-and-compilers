@@ -158,7 +158,7 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if(src[0] == "'" || src[0] == '"'){
         const quoteType = src.shift()!;
-        let str= " "
+        let str= ""
         while (src.length > 0 && src[0] !== quoteType){
             str += src.shift()!
         }

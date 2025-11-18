@@ -51,9 +51,7 @@ export interface UserFunction extends RuntimeVal {
     declarationENV: Environment
 }
 
-export function MK_RUNTIMEVAL(b: any): RuntimeVal {
-    return {type:"runtime-val",value: b} as RuntimeVal
-}
+
 
 export function MK_NTV_FUNCTION(b: FunctionCall): NativeFunction {
     return {type: "native-function", call: b};

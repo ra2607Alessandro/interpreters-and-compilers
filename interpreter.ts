@@ -76,12 +76,12 @@ function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {
         return eval_numeric_binary_expr(lhs as NumValue,  rhs as NumValue, binop.operator)
     }
     if (lhs.type == "string" && rhs.type == "string"){
-        let result : any
+        let result : boolean = false
         if (binop.operator == "==" ){
-            result = lhs == rhs
+            result = (lhs === rhs)
         }
         if ( binop.operator == "!=" ){
-            result = lhs !== rhs
+            result = (lhs != rhs)
         }
         return MK_BOOL(result)
     }
