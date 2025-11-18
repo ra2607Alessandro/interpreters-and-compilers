@@ -106,7 +106,7 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == "=" && src[1] == "=") {
         src.shift(); src.shift()
-       tokens.push(token("!=", TokenType.EqualsEquals))
+       tokens.push(token("==", TokenType.EqualsEquals))
     }
     else if (src[0] == "!" && src[1] == "=") {
         src.shift(); src.shift()
@@ -124,7 +124,7 @@ export function tokenize(sourceCode: string): Token[]{
     }
     else if (src[0] == "=" && src[1] == ">") {
         src.shift(); src.shift()
-       tokens.push(token("=>", TokenType.NotEquals))
+       tokens.push(token("=>", TokenType.GreaterOrEqual))
     }
     else if (src[0] == ".") {
        tokens.push(token(src.shift()!, TokenType.Dot))
