@@ -10,5 +10,5 @@ fn Doctor(choice){
     }
 }
 
-const dumbo = Doctor("dumbo")
+const dumbo = Doctor("Nurse")
 print(dumbo)
