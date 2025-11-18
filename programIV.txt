@@ -2,10 +2,10 @@ fn Doctor(choice){
     if ( choice == "Doctor"){
         print("Hi Mister, the doctor is not available now, please come back later")
     }
-    elif(choice == "Nurse"){
+    elif (choice == "Nurse"){
         print("Yes Sir, I'm the nurse and the doctor will be here as promised")
     }
-    else{
+    else {
         print("We're in a hospital, there's no such person like that")
     }
 }

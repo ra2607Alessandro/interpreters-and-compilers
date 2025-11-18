@@ -78,10 +78,15 @@ function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {
     if (lhs.type == "string" && rhs.type == "string"){
         let result : boolean = false
         if (binop.operator == "==" ){
-            result = ((lhs as IdentValue).value === (rhs as IdentValue).value) 
+            if ((((lhs as IdentValue).value === (rhs as IdentValue).value)) == true ){
+                result = true
+            } 
+
         }
         if ( binop.operator == "!=" ){
-            result = ((lhs as IdentValue).value !== (rhs as IdentValue).value)
+            if ((((lhs as IdentValue).value !== (rhs as IdentValue).value)) == true ){
+                result = true
+            } 
         }
         return MK_BOOL(result)
     }
