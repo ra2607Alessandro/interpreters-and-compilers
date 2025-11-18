@@ -11,9 +11,6 @@ fn coin(choice, bet){
         if (bet % 4 == 0) {
             print("You won")
         }
-        if (bet % 7 == 0) {
-            print("You won")
-        } 
         else {
             print("You lost")
         }

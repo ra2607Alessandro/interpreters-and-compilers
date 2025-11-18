@@ -222,16 +222,13 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
     }
 
     if(stmt.elif) {
-        const cond = evaluate(stmt.condition, env)
-       if (cond.type !== "boolean"){
+        const elifcond = evaluate(stmt.condition, env)
+       if (elifcond.type !== "boolean"){
         console.log(stmt.elif.condition)
-        throw new Error ("The condition of an if statement must be of boolean type")
-        
+        throw new Error ("The condition of an if statement must be of boolean type")  
     }
-      const condintion = (cond as BooleanVal).value
-      if (condintion === true) {
-        const alternative = evaluate_consequence(stmt.elif.consequence, env)
-        return alternative
+      if ((elifcond as BooleanVal).value === true) {
+        return evaluate_consequence(stmt.elif.consequence, env)   
     }
     }
     
