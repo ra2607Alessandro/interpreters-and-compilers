@@ -78,10 +78,10 @@ function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {
     if (lhs.type == "string" && rhs.type == "string"){
         let result : boolean = false
         if (binop.operator == "==" ){
-            result = (lhs === rhs) == true
+            result = (lhs === rhs) 
         }
         if ( binop.operator == "!=" ){
-            result = (lhs !== rhs) == true
+            result = (lhs !== rhs)
         }
         return MK_BOOL(result)
     }
@@ -223,7 +223,7 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
     
 
     if(stmt.elif) {
-        const elifcond = evaluate(stmt.condition, env)
+        const elifcond = evaluate(stmt.elif.condition, env)
        if (elifcond.type !== "boolean"){
         console.log(stmt.elif.condition)
         throw new Error ("The condition of an if statement must be of boolean type")  
