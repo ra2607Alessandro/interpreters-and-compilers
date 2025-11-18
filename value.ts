@@ -2,7 +2,7 @@ import { Expr, FunctionDeclare, Stat } from "./ast";
 import { Environment } from "./environment";
 
 
-export type ValueType = "runtime-val"|"null" | "number" | "string" | "boolean" | "object" | "native-function" | "user-function";
+export type ValueType = "null" | "number" | "string" | "boolean" | "object" | "native-function" | "user-function";
 
 
 export interface RuntimeVal {

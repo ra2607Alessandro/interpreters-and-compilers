@@ -1,4 +1,4 @@
-import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction, MK_RUNTIMEVAL } from "./value";
+import { ValueType, RuntimeVal, NumValue, NullValue, IdentValue, BooleanVal, ObjectValue, MK_BOOL,MK_NULL, MK_NTV_FUNCTION, FunctionCall, NativeFunction, UserFunction } from "./value";
 import { AssignmentExpr, BinaryExpr, BooleanLiteral, CallExpr, Expr, ExpressionStatement, ForLoop, FunctionDeclare, Identifier, IfStatement, Member, NodeType, NumericLiteral, ObjectLiteral, Program, Property, Stat, StringLiteral, VariableDeclare, WhileStatement } from "./ast";
 import { Environment } from "./environment";
 import { TokenType } from "./lexer";
@@ -81,7 +81,7 @@ function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {
             result = (lhs === rhs)
         }
         if ( binop.operator == "!=" ){
-            result = (lhs != rhs)
+            result = (lhs !== rhs)
         }
         return MK_BOOL(result)
     }
@@ -220,6 +220,10 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
         const alternative = evaluate_consequence(stmt.consequence, env)
         return alternative
     }
+    else if (condintion === false) {
+        console.log(stmt.condition)
+        throw ("This condition is false")
+    }
 
     if(stmt.elif) {
         const elifcond = evaluate(stmt.condition, env)
@@ -229,6 +233,10 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
     }
       if ((elifcond as BooleanVal).value === true) {
         return evaluate_consequence(stmt.elif.consequence, env)   
+    }
+    else if ((elifcond as BooleanVal).value ==  false){
+        console.log(stmt.elif.condition)
+        throw ("The condition of the elif statement is false")
     }
     }
     
