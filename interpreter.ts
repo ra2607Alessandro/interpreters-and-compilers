@@ -78,10 +78,10 @@ function eval_binary_expr(binop: BinaryExpr, env: Environment): RuntimeVal {
     if (lhs.type == "string" && rhs.type == "string"){
         let result : boolean = false
         if (binop.operator == "==" ){
-            result = (lhs === rhs)
+            result = (lhs === rhs) == true
         }
         if ( binop.operator == "!=" ){
-            result = (lhs !== rhs)
+            result = (lhs !== rhs) == true
         }
         return MK_BOOL(result)
     }
@@ -220,10 +220,7 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
         const alternative = evaluate_consequence(stmt.consequence, env)
         return alternative
     }
-    else if (condintion === false) {
-        console.log(stmt.condition)
-        throw ("This condition is false")
-    }
+    
 
     if(stmt.elif) {
         const elifcond = evaluate(stmt.condition, env)
@@ -234,10 +231,7 @@ function eval_if_stmt(stmt: IfStatement, env: Environment): RuntimeVal {
       if ((elifcond as BooleanVal).value === true) {
         return evaluate_consequence(stmt.elif.consequence, env)   
     }
-    else if ((elifcond as BooleanVal).value ==  false){
-        console.log(stmt.elif.condition)
-        throw ("The condition of the elif statement is false")
-    }
+   
     }
     
     if (stmt.else) {
