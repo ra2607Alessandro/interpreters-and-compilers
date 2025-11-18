@@ -222,6 +222,7 @@ export default class Parser {
     const ELIF = this.at()
     let elif : any = undefined
     if(ELIF?.type == TokenType.ELIF){
+      this.eat()
       this.expect(TokenType.Openparen, "Condition has to be contained inside a parenthesis")
       const expr = this.parse_expr()
       this.expect(TokenType.Closeparen, "You need to close the parenthesis bro.")
