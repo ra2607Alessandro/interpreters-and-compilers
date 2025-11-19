@@ -6,7 +6,7 @@ import { Stat, MK_PROGRAM } from "./ast";
 import { FunctionCall, MK_NTV_FUNCTION } from "./value";
 import {print} from "./ntv_functions"
 
-const src = fs.readFileSync("./programIV.txt", "utf-8")
+const src = fs.readFileSync("./programV.txt", "utf-8")
 
 const env = new Environment();
 

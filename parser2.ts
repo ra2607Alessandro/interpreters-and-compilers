@@ -503,8 +503,6 @@ export default class Parser {
           kind: "StringLiteral", 
           value: this.eat()!.value
         } as StringLiteral
-
-     
         
       // Grouping Expressions
       case TokenType.Openparen: {
@@ -515,17 +513,12 @@ export default class Parser {
           "Unexpected token found inside parenthesised expression. Expected closing parenthesis.",
         ); // closing paren
         return value;
-      
-      
-
-
       }
-      
      
       // Unidentified Tokens and Invalid Code Reached
       default:
         console.log(this.at())
-        throw new Error(`Unexpected token found during parsing: ${this.at()?.value}`);
+        throw new Error(`Unexpected token found during parsing: ${this.at()?.value}, ${this.eat().value}`);
         
     }
   }
