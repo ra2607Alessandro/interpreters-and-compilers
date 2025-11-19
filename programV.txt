@@ -1,10 +1,24 @@
-const jug = 15
+const jug = 3
 
-for(let i = 0, i <= jug, i = i + 5){
+for(let i = 0, i <= jug, i = i + 1){
     if (i == jug){
-        print(i)
-        print("We did it, we found the number")
+        print(exponential(i))
     }
+    print(i)
 }
+
+fn exponential(number){
+    let times = number
+    let result = number
+    while (times => 0){
+        result = result * number 
+        times = times - 1
+        if (times == 0){
+            print(result)
+        }
+    }
+    
+}
+
 
 
