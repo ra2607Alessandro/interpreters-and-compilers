@@ -1,4 +1,5 @@
 import { error } from "console";
+import fs = require('fs');
 import {
   ExpressionStatement,
   AssignmentExpr,
@@ -329,11 +330,11 @@ export default class Parser {
 
   if (
     this.at()!.type == TokenType.EqualsEquals ||
-    this.at()!.type == TokenType.GreaterOrEqual || 
-    this.at()!.type == TokenType.LessOrEqual|| 
+    this.at()!.type == TokenType.GreaterOrEqual ||  
+    this.at()!.type == TokenType.LessOrEqual ||  
     this.at()!.type == TokenType.NotEquals ||
     this.at()!.type == TokenType.LessThan || 
-    this.at()!.type == TokenType.GreaterThan 
+    this.at()!.type == TokenType.GreaterThan  
   ) 
   { const op = this.eat()
     const val = this.parse_object()
@@ -524,3 +525,8 @@ export default class Parser {
     }
   }
 }
+
+//const src = fs.readFileSync("./programV.txt", "utf-8")
+//const parser = new Parser()
+//const ast = parser.produceAST(src)
+//console.log(ast)
