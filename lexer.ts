@@ -112,12 +112,6 @@ export function tokenize(sourceCode: string): Token[]{
         src.shift(); src.shift()
        tokens.push(token("!=", TokenType.NotEquals))
     }
-    else if (src[0] == "<") {
-       tokens.push(token(src.shift()!, TokenType.LessThan))
-    }
-    else if (src[0] == ">") {
-       tokens.push(token(src.shift()!, TokenType.GreaterThan))
-    }
     else if (src[0] == "<" && src[1] == "=") {
         src.shift(); src.shift()
        tokens.push(token("<=", TokenType.LessOrEqual))
@@ -125,6 +119,12 @@ export function tokenize(sourceCode: string): Token[]{
     else if (src[0] == "=" && src[1] == ">") {
         src.shift(); src.shift()
        tokens.push(token("=>", TokenType.GreaterOrEqual))
+    }
+    else if (src[0] == "<") {
+       tokens.push(token(src.shift()!, TokenType.LessThan))
+    }
+    else if (src[0] == ">") {
+       tokens.push(token(src.shift()!, TokenType.GreaterThan))
     }
     else if (src[0] == ".") {
        tokens.push(token(src.shift()!, TokenType.Dot))
