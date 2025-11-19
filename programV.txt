@@ -1,7 +1,7 @@
 const jug = 15
 
 for(let i = 0, i <= jug, i = i + 5){
-    if (i = jug){
+    if (i == jug){
         print(i)
         print("We did it, we found the number")
     }
