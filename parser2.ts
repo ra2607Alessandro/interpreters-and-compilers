@@ -183,13 +183,13 @@ export default class Parser {
   private parse_for_loop(): ForLoop {
     this.eat();
     this.expect(TokenType.Openparen, "'(' is expected");
-    let init : VariableDeclare | Expr;
+    let init : VariableDeclare | Expr
     if (this.at()!.type == TokenType.Let || this.at()!.type == TokenType.Const ){
-       init = this.parse_declaration()  
+      init = this.parse_declaration()      
     }
-    else 
-    {
-    init = this.parse_expr();}
+    else {
+      init = this.parse_expr()
+    } 
     this.expect(TokenType.Comma, "',' is expected");
     const cond = this.parse_expr();
     this.expect(TokenType.Comma, "',' is expected");
@@ -329,7 +329,8 @@ export default class Parser {
 
   if (
     this.at()!.type == TokenType.EqualsEquals ||
-    this.at()!.type == TokenType.GreaterOrEqual ||  
+    this.at()!.type == TokenType.GreaterOrEqual || 
+    this.at()!.type == TokenType.LessOrEqual|| 
     this.at()!.type == TokenType.NotEquals ||
     this.at()!.type == TokenType.LessThan || 
     this.at()!.type == TokenType.GreaterThan 
