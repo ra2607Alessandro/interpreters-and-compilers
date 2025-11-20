@@ -519,8 +519,7 @@ export default class Parser {
       case TokenType.OpenBrace: 
         return this.parse_object()
       
-      case TokenType.Function:
-        return this.parse_fn_declaration()
+      
 
       // Unidentified Tokens and Invalid Code Reached
       default:
