@@ -1,5 +1,3 @@
-
-
 const obj = {greg: 23, mary: 25, ash:  23, sara: 24, blake: 21, john: 25}
 
 fn eldest(nameI, nameII){

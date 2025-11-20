@@ -520,7 +520,7 @@ export default class Parser {
         return this.parse_object()
       
       case TokenType.Function:
-        return this.parse_stmt()
+        return this.parse_fn_declaration()
 
       // Unidentified Tokens and Invalid Code Reached
       default:
