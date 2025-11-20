@@ -1,3 +1,4 @@
+
 const obj = {greg: 23, mary: 25, ash:  23, sara: 24, blake: 21, john: 25}
 
 fn eldest(nameI, nameII){
@@ -12,5 +13,8 @@ fn eldest(nameI, nameII){
   }
 }
 
-const names = (obj.greg, obj.sara)
+const names = eldest(obj.greg, obj.sara)
 print(names)
+
+
+

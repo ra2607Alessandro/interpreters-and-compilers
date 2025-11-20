@@ -517,6 +517,10 @@ export default class Parser {
         return value;
       }
      
+      case TokenType.OpenBrace: {
+        return this.parse_object()
+      } 
+      
       // Unidentified Tokens and Invalid Code Reached
       default:
         console.log(this.at())
