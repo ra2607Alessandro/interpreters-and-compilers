@@ -144,7 +144,6 @@ export default class Parser {
 
   // Handle complex statement types
   private parse_stmt(): Stat {
-    // skip to parse_expr
     
     const current = this.at()!.type
     switch(current) {
@@ -185,7 +184,7 @@ export default class Parser {
     this.eat();
     this.expect(TokenType.Openparen, "'(' is expected");
     let init : VariableDeclare | Expr
-    if (this.at()!.type == TokenType.Let || this.at()!.type == TokenType.Const ){
+    if (this.at()!.type == TokenType.Let || this.at()!.type == TokenType.Const){
       init = this.parse_declaration()      
     }
     else {
@@ -517,10 +516,12 @@ export default class Parser {
         return value;
       }
      
-      case TokenType.OpenBrace: {
+      case TokenType.OpenBrace: 
         return this.parse_object()
-      } 
       
+      case TokenType.Function:
+        return this.parse_stmt()
+
       // Unidentified Tokens and Invalid Code Reached
       default:
         console.log(this.at())
