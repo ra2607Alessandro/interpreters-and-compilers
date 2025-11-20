@@ -435,7 +435,7 @@ export default class Parser {
   private parse_member_expr(): Expr {
     let obj = this.parse_primary_expr();
 
-    while (this.at()!.type == TokenType.Dot || this.at()!.type == TokenType.OpenSquare) {
+    while (this.at()!.type == TokenType.Dot || this.at()!.type !== TokenType.CloseSquare) {
       let operator = this.eat();
       let property : Expr ;
       let isComputed : boolean 
@@ -520,7 +520,7 @@ export default class Parser {
       // Unidentified Tokens and Invalid Code Reached
       default:
         console.log(this.at())
-        throw new Error(`Unexpected token found during parsing: ${this.at()?.value}, ${this.eat().value}`);
+        throw new Error(`Unexpected token found during parsing: ${this.at()?.value}`);
         
     }
   }

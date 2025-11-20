@@ -325,7 +325,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.parse_member_expr = function () {
         var obj = this.parse_primary_expr();
-        while (this.at().type == lexer_1.TokenType.Dot || this.at().type == lexer_1.TokenType.OpenSquare) {
+        while (this.at().type == lexer_1.TokenType.Dot || this.at().type !== lexer_1.TokenType.CloseSquare) {
             var operator = this.eat();
             var property = void 0;
             var isComputed = void 0;
@@ -395,7 +395,7 @@ var Parser = /** @class */ (function () {
             // Unidentified Tokens and Invalid Code Reached
             default:
                 console.log(this.at());
-                throw new Error("Unexpected token found during parsing: ".concat((_b = this.at()) === null || _b === void 0 ? void 0 : _b.value, ", ").concat(this.eat().value));
+                throw new Error("Unexpected token found during parsing: ".concat((_b = this.at()) === null || _b === void 0 ? void 0 : _b.value));
         }
     };
     return Parser;
