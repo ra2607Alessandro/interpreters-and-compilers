@@ -473,6 +473,7 @@ export default class Parser {
   private parse_primary_expr(): Expr {
 
     const tk = this.at()?.type;
+    const value = this.at()?.value
 
     // Determine which token we are currently at and return literal value
     switch (tk!) {
@@ -519,18 +520,11 @@ export default class Parser {
       case TokenType.OpenBrace: 
         return this.parse_object()
       
-      
 
       // Unidentified Tokens and Invalid Code Reached
       default:
-        console.log(this.at())
-        throw new Error(`Unexpected token found during parsing: ${this.at()?.value}`);
-        
-    }
+        console.log(tk)
+        throw new Error (`Unexpected value found during parsing: ${this.at()!.value}`)
   }
 }
-
-//const src = fs.readFileSync("./programV.txt", "utf-8")
-//const parser = new Parser()
-//const ast = parser.produceAST(src)
-//console.log(ast)
+}

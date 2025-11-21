@@ -358,6 +358,7 @@ var Parser = /** @class */ (function () {
     Parser.prototype.parse_primary_expr = function () {
         var _a, _b;
         var tk = (_a = this.at()) === null || _a === void 0 ? void 0 : _a.type;
+        var value = (_b = this.at()) === null || _b === void 0 ? void 0 : _b.value;
         // Determine which token we are currently at and return literal value
         switch (tk) {
             // User defined values.
@@ -387,22 +388,18 @@ var Parser = /** @class */ (function () {
             // Grouping Expressions
             case lexer_1.TokenType.Openparen: {
                 this.eat(); // eat the opening paren
-                var value = this.parse_expr();
+                var value_1 = this.parse_expr();
                 this.expect(lexer_1.TokenType.Closeparen, "Unexpected token found inside parenthesised expression. Expected closing parenthesis."); // closing paren
-                return value;
+                return value_1;
             }
             case lexer_1.TokenType.OpenBrace:
                 return this.parse_object();
             // Unidentified Tokens and Invalid Code Reached
             default:
-                console.log(this.at());
-                throw new Error("Unexpected token found during parsing: ".concat((_b = this.at()) === null || _b === void 0 ? void 0 : _b.value));
+                console.log(tk);
+                throw new Error("Unexpected value found during parsing: ".concat(this.at().value));
         }
     };
     return Parser;
 }());
 exports.default = Parser;
-//const src = fs.readFileSync("./programV.txt", "utf-8")
-//const parser = new Parser()
-//const ast = parser.produceAST(src)
-//console.log(ast)
