@@ -434,7 +434,7 @@ export default class Parser {
   private parse_member_expr(): Expr {
     let obj = this.parse_primary_expr();
 
-    while (this.at()!.type == TokenType.Dot || this.at()!.type !== TokenType.CloseSquare) {
+    while (this.at()!.type == TokenType.Dot || this.at()!.type == TokenType.OpenSquare) {
       let operator = this.eat();
       let property : Expr ;
       let isComputed : boolean 
