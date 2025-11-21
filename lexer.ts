@@ -129,27 +129,6 @@ export function tokenize(sourceCode: string): Token[]{
     else if (src[0] == ".") {
        tokens.push(token(src.shift()!, TokenType.Dot))
     }
-    else if (src[0] == "fn") {
-       tokens.push(token(src.shift()!, TokenType.Function)) 
-    }
-    else if (src[0] == "for") {
-        tokens.push(token(src.shift()!, TokenType.FOR))
-    }
-    else if (src[0] == "if") {
-        tokens.push(token(src.shift()!, TokenType.IF))
-    }
-    else if (src[0] == "else") {
-        tokens.push(token(src.shift()!, TokenType.ELSE))
-    }
-    else if (src[0] == "elif") {
-        tokens.push(token(src.shift()!, TokenType.ELIF))
-    }
-    else if (src[0] == "while") {
-        tokens.push(token(src.shift()!, TokenType.WHILE))
-    }
-    else if (src[0] == "true" || src[0] == "false"){
-        tokens.push(token(src.shift()!, TokenType.Boolean))
-    }
     else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/"|| src[0]== "%"){
         tokens.push(token(src.shift()!, TokenType.BinaryOper));
     }
